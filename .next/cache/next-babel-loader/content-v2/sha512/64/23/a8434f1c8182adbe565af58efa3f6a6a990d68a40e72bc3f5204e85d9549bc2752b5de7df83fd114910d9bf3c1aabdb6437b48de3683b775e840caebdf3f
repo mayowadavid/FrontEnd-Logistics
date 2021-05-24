@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var api = 'http://localhost:4000/api';","map":{"version":3,"sources":["H:/G4 Logistics/FrontEnd/urlConfig.js"],"names":["api"],"mappings":"AAAA,OAAO,IAAMA,GAAG,GAAG,2BAAZ","sourcesContent":["export const api = 'http://localhost:4000/api';"]},"metadata":{},"sourceType":"module"}
