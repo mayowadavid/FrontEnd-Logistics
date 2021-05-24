@@ -70,7 +70,7 @@ const ClientContextProvider = (props) => {
     e.preventDefault();
     const token = localStorage && localStorage.getItem('token');
     let id = profile.id;
-    let res = await axios.post('/profile/' + id, form, { headers: {
+    let res = await axios.post('/profile/update', form, { headers: {
       'Authorization': token ? `Bearer ${token}`: ''
   }});
     console.log(res);
