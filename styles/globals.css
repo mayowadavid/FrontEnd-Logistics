@@ -105,6 +105,26 @@ input[type=text]{
   .overall-form {
     overflow: hidden;
     padding: 12% 0 0;
+    place-items: center;
+    margin: auto;
+  }
+
+  .form_container {
+    display: grid;
+    height: 100vh;
+  }
+
+  .contact-form {
+    width: 40%;
+    z-index: 2;
+    background-color: #fff;
+    padding: 2vh;
+    border-style: solid;
+    border-radius: 1vh;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    bottom: 10vh;
   }
 
   .former {
@@ -455,11 +475,44 @@ input[type=text]{
     margin: 3vh;;
   }
 
+  /* mobile-layout */ 
+  @media (max-width:736px) and (min-width:360px) {
+  
+    .sender {
+          grid-template-columns: auto !important;
+      }
+      .receiver {
+          grid-template-columns: auto !important;
+      }
+      .others {
+          grid-template-columns: auto !important;
+      }
+      .user {
+        grid-template-columns: auto !important;
+      }
+      .user textarea {
+        height: auto;
+        width: 90%;
+      }
+      .user-profile input[type=text] {
+        width: 100% !important;
+      }
+      .signup {
+        grid-template-columns: auto !important;
+      }
+      .signup-wrapper {
+        width: 90vw !important;
+      }
+  }
+  /* mobile-layout */
+
+
+
   .user-request {
     max-width: 90vh;
     margin: 0 auto;
     border-style: solid;
-    padding: 10vh;
+    padding: 6vh;
     border-radius: 4vh;
     border-width: 0.5vh;
     border-color: #f3f2f2;
@@ -560,6 +613,20 @@ input[type=text]{
     box-sizing: border-box;
     font-weight: bold;
   }
+
+  .descriptions{
+    max-height: auto;
+  }
+
+  textarea{
+    width: 90%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-weight: bold;
+  }
   
   .user-request input[type=submit]{
     padding: 1vh;
@@ -628,18 +695,6 @@ input[type=text]{
     box-shadow: 0 1px 3px rgb(0 0 0 / 13%);
   }
 
-  .contact-form {
-    width: 40%;
-    z-index: 2;
-    background-color: #fff;
-    padding: 2vh;
-    border-style: solid;
-    border-radius: 1vh;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    bottom: 10vh;
-  }
 
 .add-button  {
   display: flex;

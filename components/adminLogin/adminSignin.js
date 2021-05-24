@@ -9,7 +9,8 @@ const AdminSignin = () => {
   const {formErrors} = login;
 
   return (
-  <div className="overall-form">
+    <div className="form_container">
+        <div className="overall-form">
         <div  className="former">
         <form onSubmit={handleAdminSubmit}>
             <p>
@@ -37,6 +38,7 @@ const AdminSignin = () => {
           <h5>Don't have an account?</h5><h5><Link href="/signup"><a>Sign up</a></Link></h5>
       </div>
   </div>
+    </div>
     )}
     
 export default AdminSignin;

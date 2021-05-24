@@ -158,9 +158,11 @@ const AddRequest = () => {
                         <span className="errorMessage">{formErrors.deliveryLocations}</span>
                     )}
                     </p>
+              </div>
+              <div className="descriptions">
                     <p>
                     <label htmlFor="description">Descriptions</label>
-                    <input type="text" id="descriptions" onChange={handleChange} name="descriptions" value={input.descriptions}  placeholder="descriptions"/>
+                    <textarea cols="40" rows="6" id="descriptions" onChange={handleChange} name="descriptions" value={input.descriptions}  placeholder="descriptions"/>
                     {formErrors.descriptions.length > 0  && (
                         <span className="errorMessage">{formErrors.descriptions}</span>
                     )}

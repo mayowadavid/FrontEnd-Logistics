@@ -52,7 +52,7 @@ const ProfileEdit = () => {
                   )}
                 </p>       
                 <p><label htmlFor="address">Address</label>
-                  <input type="text" onChange={ profileDetails } id="address" name="address" value={profile.address} placeholder="Your Address"/>
+                  <textarea cols="4" row="8" type="text" onChange={ profileDetails } id="address" name="address" value={profile.address} placeholder="Your Address"/>
                   {formErrors.address.length > 0  && (
                     <span className="errorMessage">{formErrors.address}</span>
                   )}</p>
