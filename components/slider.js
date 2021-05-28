@@ -12,11 +12,11 @@ export default function SimpleSlider() {
     draggable: true,
     speed: 500
   };
-  const {permanentImages} = useContext(RequestContext);
+  const {temporaryImage} = useContext(RequestContext);
   return (
     <Slider {...settings}>
-      {permanentImages.length > 0 && permanentImages.map(({img}) => 
-                    <img src={img} key={uuidv4()}/>
+      {temporaryImage.length > 0 && temporaryImage.map(({imageSource}) => 
+                    <img src={imageSource} key={uuidv4()}/>
                 )}
     </Slider>
   );

@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from '../../helpers/axios';
-import {generatePublicUrl} from '../../urlConfig';
 import {gallery, message, offBack, contact} from "../../svg";
 import { requestValidate } from '../validator/validate';
 import {useRouter} from 'next/router';
+import {store} from '../firebase';
 
 export const RequestContext = createContext();
 
@@ -90,14 +90,36 @@ const RequestContextProvider = (props) =>{
     const [extractedRequest, setExtractedRequest] = useState();
     const [sessionToken, setSessionToken] = useState();
     const [isLogin, setisLogin] = useState(false);
-    const[permanentImages, setPermanentImages] = useState([]);
-    const [requestImages, setRequestImage] = useState();
+    const[temporaryImage, setTemporaryImage] = useState([]);
+    const [requestImages, setRequestImages] = useState([]);
     const [count, setCount] = useState();
     const [form, setForm] = useState();
     const [requestSuccess, setRequestSuccess] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [error, setError] = useState(null);
+    const [url, setUrl] = useState([]);
     const router = useRouter();
+
+    useEffect ( () => {
+                if(url == ""){
+                    setRequestImages([])
+        }else{
+            setRequestImages([...requestImages, {cloudUrl: url}])
+        }
+                   
+    }, [url]);
+    
+    // useEffect ( () => {
+                
+    //     console.log(requestImages);
+        
+    // }, [url]);
    
-    console.log(permanentImages);
+    // console.log(requestImages);
+    // console.log(progress);
+    // console.log(url)
+    
+
 
     const handleChange = (e) => {
         if(e){
@@ -115,35 +137,41 @@ const RequestContextProvider = (props) =>{
     const newInput = {...input, [name]: checked};
     return setInput(newInput);
    } 
+   console.log(temporaryImage);
+   console.log(requestImages);
 
-    const photoChange = (e) => {
-        e.preventDefault();
-          if(e.target.files){
-              setRequestImage(e.target.files);
-               let Format = ['image/jpeg', 'image/png', 'image/gif', 5000000];
-              let filterUrl = Array.from(e.target.files).filter(x=> (x.type == Format[0] || x.type == Format[1]) && (x.size <= Format[2] || x.size <= Format[3]) );
-              
-                let sourceUrl = filterUrl && filterUrl.map((file)=> URL.createObjectURL(file));
-                let mapUrl = sourceUrl.map(url => {
-                    // let generate = generatePublicUrl(url);
-                    let img = url
-                    return {img }}
-                    )
-            if(mapUrl !== []){
-                let updatedPermanentImage = [...permanentImages, ...mapUrl ]
-                setPermanentImages(updatedPermanentImage);
-            }else{
-                setPermanentImages(sourceUrl);
-            }
-            
-            URL.revokeObjectURL(e.target.files); 
-      } 
+const photoChange = (e) => {
+    e.preventDefault();  
+   if(e.target.files){
+     let selected = e.target.files[0];
+    let types = ['image/jpeg', 'image/png'];
+   let fileType = selected !== undefined ? types.includes(selected.type): setError("unsupported image type* accepted image jpg/png");
+      let FileSize = "5000000";
+     let filteredImageSize= fileType == true ? selected.size < FileSize : setError("file too large *5mb minimum"); 
+     let perfectSize = filteredImageSize == true && (URL.createObjectURL(selected)); 
+    let restructureUrl = {imageSource: perfectSize}
+    perfectSize !== undefined && setTemporaryImage([...temporaryImage, restructureUrl]);
+      if(filteredImageSize == true ){
+      const storageRef = store.ref(`requestImages/${selected.name}`);
+        storageRef.put(selected).on('state_changed', 
+        async (snap) => {
+          const newPercentage = await (snap.bytesTransferred / snap.totalBytes) * 100;
+        await setProgress(newPercentage);
+        },  async (err) => {
+        await setError(err);
+        }, async () => {
+          const newUrl = await storageRef.getDownloadURL();
+        setUrl([newUrl ]);
+        });
+      }
+     URL.revokeObjectURL(selected);   
     }
+};
     
-    const handleFormSubmit = async(e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage && localStorage.getItem('token');
-        const res = await axios.post('/request/create', form, {
+        const res = await axios.post('/request/create', input, {
             headers : {'authorization': token ? `Bearer ${token}` : ''}
         }).catch(function (error) {
             if (error.response) {
@@ -177,7 +205,7 @@ const RequestContextProvider = (props) =>{
                   setRequestSuccess(true)
               )
           )
-    }
+    };
 
     const handleReceiver = (e) => {
             
@@ -194,69 +222,13 @@ const RequestContextProvider = (props) =>{
 
     const handleRequestUpdate = async(e, id) => {
         e.preventDefault();
-        let form = new FormData();
-        if(requestImages !== undefined){
-
-            for( let img of requestImages){
-                form.append('requestImages', img)
-            }                                                   
-       }
-            const {cartons, deliveryLocations, descriptions, itemsWorth, otherItems, tagName, receiver, sender, status, amount } = {...input}
-                form.append('cartons', cartons);
-                form.append('deliveryLocations', deliveryLocations);
-                form.append('descriptions', descriptions);
-                form.append('itemsWorth', itemsWorth);
-                form.append('otherItems',  otherItems); 
-                form.append('tagName',  tagName); 
-                form.append('receiver[firstName]',  receiver.firstName);
-                form.append('receiver[phoneNumber1]',  receiver.phoneNumber1);
-                form.append('receiver[phoneNumber2]',  receiver.phoneNumber2);
-                form.append('sender[firstName]',  sender.firstName);
-                form.append('sender[phoneNumber1]',  sender.phoneNumber1);
-                form.append('sender[phoneNumber2]',  sender.phoneNumber1); 
-               
-                 input._id && form.append('status', status);
-                 input._id && form.append('amount', amount);
-                setForm(form);
-
-                for(let pair of form.entries()){
-                    console.log([pair[0]+ ',' + pair[1]])
-              }
-        const res = await axios.put('/request/' + id, form);
+       setInput(...input, requestImages);
+        const res = await axios.put('/request/' + id, input);
     }
 
     const handleFormPreview = (e) => {
         e.preventDefault();
-        let form = new FormData();
-        if(requestImages !== undefined){
-
-            for( let img of requestImages){
-                form.append('requestImages', img)
-            }                                                   
-       }
-            const {cartons, deliveryLocations, descriptions, itemsWorth, otherItems, tagName, receiver, sender, status, amount } = {...input}
-                form.append('cartons', cartons);
-                form.append('deliveryLocations', deliveryLocations);
-                form.append('descriptions', descriptions);
-                form.append('itemsWorth', itemsWorth);
-                form.append('otherItems',  otherItems); 
-                form.append('tagName',  tagName); 
-                form.append('receiver[firstName]',  receiver.firstName);
-                form.append('receiver[phoneNumber1]',  receiver.phoneNumber1);
-                form.append('receiver[phoneNumber2]',  receiver.phoneNumber2);
-                form.append('sender[firstName]',  sender.firstName);
-                form.append('sender[phoneNumber1]',  sender.phoneNumber1);
-                form.append('sender[phoneNumber2]',  sender.phoneNumber1); 
-               
-                 input._id && form.append('status', status);
-                 input._id && form.append('amount', amount);
-
-
-                setForm(form);
-
-                for(let pair of form.entries()){
-                    console.log([pair[0]+ ',' + pair[1]])
-              }
+       setInput({...input, requestImages});
         setCount("active");
     }
 
@@ -273,7 +245,7 @@ const RequestContextProvider = (props) =>{
 
 
     return (
-        <RequestContext.Provider value={{input, requestSuccess, setRequestSuccess, initialState, setCount, count, setInput, handleChange, handleReceiver, handleCheck, permanentImages, setPermanentImages, handleFormSubmit, handleFormPreview, photoChange, selector, setExtractedRequest, extractedRequest, contacts, setContacts, handleRequestUpdate, sessionToken, isLogin, setisLogin}}>
+        <RequestContext.Provider value={{input, error, requestImages, requestSuccess, setRequestSuccess, initialState, setCount, count, setInput, handleChange, handleReceiver, handleCheck, temporaryImage, handleFormSubmit, handleFormPreview, photoChange, selector, setExtractedRequest, extractedRequest, contacts, setContacts, handleRequestUpdate, sessionToken, isLogin, setisLogin}}>
             {props.children}
         </RequestContext.Provider>
     )

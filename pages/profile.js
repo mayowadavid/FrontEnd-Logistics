@@ -12,7 +12,7 @@ const Profile = () => {
     const{isLogin, setisLogin} = useContext(AuthContext); 
     const{profile, setProfile, setTemporaryImage} = useContext(ClientContext);
     const router = useRouter();
-    console.log(profile);
+
     useEffect (async () => {
         const token = localStorage && localStorage.getItem('token');
         token !== undefined && (setisLogin(true))

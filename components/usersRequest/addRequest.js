@@ -7,7 +7,7 @@ import React, {useContext, useState} from 'react';
 
 const AddRequest = () => {
 
-    const {input, handleChange, handleReceiver, handleCheck, permanentImages, handleFormPreview, photoChange, handleRequestUpdate, setCount} = useContext(RequestContext);
+    const {input, error, handleChange, handleReceiver, handleCheck, temporaryImage, requestImages, handleFormPreview, photoChange, handleRequestUpdate, setCount} = useContext(RequestContext);
 
     const [statusOption, setStatusOption] = useState([
         {options: "pending"}, 
@@ -21,17 +21,18 @@ const AddRequest = () => {
 
     const photoSource = () => {
        
-        if(permanentImages.length ){
-            return(<> {permanentImages.map(({img}) => 
-                <img src={img} key={uuidv4()}/>)}
+        if(temporaryImage || requestImages ){
+            return(<> {temporaryImage.map(({imageSource}) => 
+            <img src={imageSource} key={uuidv4()} />
+            ) }
                 <label htmlFor="file">
-                    <input type="file" multiple name="img" onChange={photoChange} id="file" />
+                    <input type="file" name="img" onChange={photoChange} id="file" />
                     {upload()}<h4>Upload Images</h4>
                 </label> 
                 </>)
         }else{
            return (<label htmlFor="file">
-                    <input type="file" multiple name="img" onChange={photoChange} id="file" />
+                    <input type="file" name="img" onChange={photoChange} id="file" />
                     {upload()}<h4>Upload Images</h4>
                 </label> )
         }
@@ -56,15 +57,15 @@ const AddRequest = () => {
     }
 
     const {formErrors } = {...input}
-    console.log(formErrors);
 
     return (
           <>
               <div className="photo">
-                    {permanentImages ? photoSource() : 
+                    {temporaryImage ? photoSource() : 
                              <label htmlFor="file">
-                             <input type="file" multiple name="img" onChange={photoChange} id="file" />
+                             <input type="file" name="img" onChange={photoChange} id="file" />
                                 {upload()}<h4>Upload Images</h4>
+                                {<div>{error}</div>}
                             </label>  
                     }
               </div>

@@ -1,3 +1,9 @@
+:root{
+  --primary: #efb6b2;
+  --secondary: #4e4e4e;
+  --error: #ff4a4a;
+}
+
 html, body{
   margin: 0;
   border: 0;
@@ -476,7 +482,7 @@ input[type=text]{
   }
 
   /* mobile-layout */ 
-  @media (max-width:736px) and (min-width:360px) {
+  @media (max-width:736px) and (min-width:60px) {
   
     .sender {
           grid-template-columns: auto !important;
@@ -504,6 +510,7 @@ input[type=text]{
         width: 90vw !important;
       }
   }
+  
   /* mobile-layout */
 
 
@@ -851,5 +858,17 @@ table {
   color: red;
   font-weight: bold;
   font-size: 2.2vh;
+}
+
+
+.error{
+  color: var(--error);
+}
+
+/* progress bar styles */
+.progress-bar{
+  height: 5px;
+  background: var(--primary);
+  margin-top: 20px;
 }
 

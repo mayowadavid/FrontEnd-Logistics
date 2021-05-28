@@ -3,6 +3,7 @@ import React, { createContext, useState } from 'react';
 import axios from '../../helpers/axios';
 import {generatePublicUrl} from '../../urlConfig';
 import { profileValidate } from '../validator/validate';
+import {store} from '../firebase';
 
 export const ClientContext = createContext();
 
@@ -28,33 +29,39 @@ const ClientContextProvider = (props) => {
 
     // .type !== Format[0] || Format[1] || Format[2]) && (profileImage.size <= Format[2] || profileImage.size <= Format[3])
 
-    const [profileImage, setProfileImage] = useState()
-
+    const [profileImage, setProfileImage] = useState();
     const[temporaryImage, setTemporaryImage]= useState();
-    const[form, setForm] = useState();
     const [count, setCount] = useState();
     const [transaction, setTransaction] = useState([]);
-    
+    const [error, setError] = useState(null);
+    const [progress, setProgress] = useState(0);
 
     const handleProfileChange = (e) => {
         e.preventDefault();  
-        
-        if(e.target.files){
-         setProfileImage(e.target.files[0])
-          let Format = ['image/jpeg', 'image/png', 'image/gif', 5000000];
-         let hold = URL.createObjectURL(e.target.files[0]);
-         setTemporaryImage(hold);
-         URL.revokeObjectURL(e.target.files[0]);   
-      }
+       if(e.target.files){
+         let selected = e.target.files[0];
+        let types = ['image/jpeg', 'image/png'];
+       let fileType = selected !== undefined ? types.includes(selected.type): setError("unsupported image type* accepted image jpg/png");
+          let FileSize = "5000000";
+         let filteredImageSize= fileType == true ? selected.size < FileSize : setError("file too large *5mb minimum"); 
+         let hold = filteredImageSize == true && (URL.createObjectURL(selected)); 
+         hold !== undefined && setTemporaryImage(hold);
+          if(filteredImageSize == true ){
+          const storageRef = store.ref(`profileimages/${selected.name}`);
+            storageRef.put(selected).on('state_changed', 
+            async (snap) => {
+              const newPercentage = await (snap.bytesTransferred / snap.totalBytes) * 100;
+            await setProgress(newPercentage);
+            },  async (err) => {
+            await setError(err);
+            }, async () => {
+              const newUrl = await storageRef.getDownloadURL();
+            await setProfileImage(newUrl);
+            });
+          }
+         URL.revokeObjectURL(selected);   
+        }
   };
-
-  const formValid = formErrors => {
-    let valid = true;
-
-    object.values(formErrors).forEach(val => {
-      val.length > 0 && (valid = false)
-    })
-  }
 
   const profileDetails = (e) => {
     e.preventDefault();
@@ -69,44 +76,33 @@ const ClientContextProvider = (props) => {
   const handleProfileSubmit = async(e) => {
     e.preventDefault();
     const token = localStorage && localStorage.getItem('token');
-    let id = profile.id;
-    let res = await axios.post('/profile/update', form, { headers: {
+    let res = await axios.post('/profile/update', profile, { headers: {
       'Authorization': token ? `Bearer ${token}`: ''
   }});
-    console.log(res);
     if(res.status == 201){
       const {updatedProfile} = res.data;
       const {profileImage} = updatedProfile;
-      let newProfile = generatePublicUrl(profileImage);
-     setTemporaryImage(newProfile);
+     setTemporaryImage(profileImage);
     }
     ;
   }; 
 
+
   const handleProfilePreview = (e) => {
     e.preventDefault();
-    const {firstName, lastName, email, phoneNumber, address} = {... profile}
-    let form = new FormData();
-    form.append('profileImage', profileImage)
-    form.append('firstName', firstName);
-    form.append('email', email);
-    form.append('lastName', lastName);
-    form.append('phoneNumber',  phoneNumber);
-    form.append('address',  address);
-    setForm(form);
+    let newProfile = {...profile, profileImage}
+    setProfile(newProfile);
     setCount('active');
-         for(let pair of form.entries()){
-          console.log([pair[0]+ ',' + pair[1]])
-    }
-
   }
+
+
 
   
 
   
 
     return (
-        <ClientContext.Provider value={{transaction, setTransaction, handleProfileChange, handleProfilePreview, handleProfileSubmit, profile, setProfile, setTemporaryImage, temporaryImage, profileDetails, setProfileImage, count, setCount}}>
+        <ClientContext.Provider value={{ transaction, setTransaction, handleProfileChange, handleProfilePreview, handleProfileSubmit, profile, setProfile, setTemporaryImage, temporaryImage, profileDetails, profileImage, setProfileImage, count, setCount}}>
             {props.children}
         </ClientContext.Provider>
     )

@@ -5,16 +5,16 @@ import {avatar} from "../../svg";
 
 const ProfileEdit = () => {
 
-    const { handleProfileChange , handleProfilePreview, profile, temporaryImage, profileDetails} = useContext(ClientContext);
+    const { handleProfileChange , handleProfilePreview, profile, temporaryImage, profileImage, profileDetails} = useContext(ClientContext);
 
     const {formErrors} = profile;
-
+    console
     return (
       <div className="profile-wrapper">
             <div  className="user-profile">
             <div className="profile-avatar">
               {
-                temporaryImage ? <img src={temporaryImage} /> : (<div> 
+                temporaryImage !==  undefined ? <img src={profileImage !== undefined ? profileImage : temporaryImage} /> : (<div> 
                 <input type="file" name="profilePicture" onChange={ handleProfileChange } id="file" accept="/.jpg, .png, gif" />
                 <label htmlFor="file">
                   {avatar()}<h4>Upload avatar</h4>
