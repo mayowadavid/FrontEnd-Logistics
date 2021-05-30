@@ -170,19 +170,16 @@ const AuthContextProvider = (props) => {
             }
             console.log(error.config);
           });
-       
-        res && ( res.status == 200 && (
-          setAuthenticating(false),
-          setAuthenticate(true),
-          setisLogin(true),
-          token= res.data.token,
-          user= res.data.user,
-          localStorage.setItem('token', token),
-          message = "welcome",
-          setSuccess({...success, message, token, user}),
-          router.replace('/contact'),
-          console.log(success)
-        ))
+       if(res && res.status == 200){
+        setAuthenticating(false);
+        setAuthenticate(true);
+        setisLogin(true);
+       const {token, user}= res.data;
+        localStorage.setItem('token', token);
+        let message = "welcome";
+        setSuccess({...success, message, token, user});
+        router.replace('/contact');
+       }
       }; 
 
 

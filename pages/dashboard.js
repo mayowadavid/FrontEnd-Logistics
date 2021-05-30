@@ -15,7 +15,6 @@ const Dashboard = () => {
 
 }, []);
 
-    setisLogin(true);
 
     return (
       isLogin == true ?
