@@ -10,7 +10,7 @@ import {generatePublicUrl} from '../urlConfig';
 const Profile = () => {
 
     const{isLogin, setisLogin} = useContext(AuthContext); 
-    const{profile, setProfile, setTemporaryImage} = useContext(ClientContext);
+    const{profile, setProfile, setProfileImage} = useContext(ClientContext);
    
   console.log(isLogin);
     useEffect (async () => {
@@ -59,7 +59,7 @@ const Profile = () => {
                     setProfile({...res.data.profile, ...formError})
                 ),
                 res.data.profile.profileImage  && (
-                  setTemporaryImage(generatePublicUrl(res.data.profile.profileImage))
+                  setProfileImage(res.data.profile.profileImage)
               )
                 )
   

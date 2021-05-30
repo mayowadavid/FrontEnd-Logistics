@@ -33,6 +33,37 @@ const Contact = () => {
     const{contacts, setContacts} = useContext(RequestContext); 
     const{isLogin, setisLogin} = useContext(AuthContext);
 
+    useEffect (async () => {
+        const token = localStorage.getItem('token');
+          token !== null && (setisLogin(true))
+          let res = await axios.get('/profile/get', { headers: {
+            'Authorization': 
+            token ? `Bearer ${token}`: ''
+        }}).catch(function (error) {
+                if (error.response) {
+                  // The request was made and the server responded with a status code
+                  // that falls out of the range of 2xx
+                  console.log(error.response.data);
+                  console.log(error.response.status);
+                  console.log(error.response.headers);
+                } else if (error.request) {
+                  // The request was made but no response was received
+                  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                  // http.ClientRequest in node.js
+                  console.log(error.request);
+                } else {
+                  // Something happened in setting up the request that triggered an Error
+                  console.log('Error', error.message);
+                }
+                console.log(error.config);
+              });
+                res && (
+                    res.data.user.role == 'admin' && ( setisLogin(true)),
+                    setContacts(res.data.profile)
+                    )
+    
+    }, []);
+
     // change contact
         const handleChange = (e) => {
                 if(e){
@@ -111,7 +142,6 @@ const Contact = () => {
             }
         }
 
-        setisLogin(true);
     
     return ( isLogin == true ? (<>
         <SideButton />
@@ -159,7 +189,7 @@ const Contact = () => {
                         </thead>
                         <tbody>{  
                                              search(contacts).map(({ firstName, email, phoneNumber, address}, i) =>{  
-                                        return (<tr key={uuidv4()} ><td><input type="checkbox"   onChange={(e)=> { (contacts[i] = e.target.checked) || setSelectAll(false)}}  /></td><td><div>{firstName}</div></td><td><strong>{email}</strong></td><td><strong>{phoneNumber}</strong></td><td><strong>{address}</strong></td></tr>)
+                                        return (<tr key={uuidv4()} ><td><input type="checkbox"   onChange={(e)=> { (contacts[i] = e.target.checked) || setSelectAll(false)}}  /></td><td><div>{firstName ? firstName: '--'}</div></td><td><strong>{email ? email: '--'}</strong></td><td><strong>{phoneNumber? phoneNumber: '--'}</strong></td><td><strong>{address ? address: '--'}</strong></td></tr>)
                                     }
                                   ) }
                         </tbody>

@@ -81,8 +81,7 @@ const RequestContextProvider = (props) =>{
             status: '',
             tagName: '',
             amount: '',
-            requestImages: [{img: '',
-                                _id: ''}],
+            requestImages: [{img: ''}],
             }
         };
     const[input, setInput] = useState(initialState);
@@ -108,16 +107,6 @@ const RequestContextProvider = (props) =>{
         }
                    
     }, [url]);
-    
-    // useEffect ( () => {
-                
-    //     console.log(requestImages);
-        
-    // }, [url]);
-   
-    // console.log(requestImages);
-    // console.log(progress);
-    // console.log(url)
     
 
 
@@ -232,7 +221,7 @@ const photoChange = (e) => {
         setCount("active");
     }
 
-    
+    console.log(input);
 
 
 
