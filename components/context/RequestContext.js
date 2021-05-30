@@ -96,7 +96,7 @@ const RequestContextProvider = (props) =>{
     const [requestSuccess, setRequestSuccess] = useState(false);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
-    const [url, setUrl] = useState([]);
+    const [url, setUrl] = useState({});
     const router = useRouter();
 
     useEffect ( () => {
@@ -126,8 +126,7 @@ const RequestContextProvider = (props) =>{
     const newInput = {...input, [name]: checked};
     return setInput(newInput);
    } 
-   console.log(temporaryImage);
-   console.log(requestImages);
+
 
 const photoChange = (e) => {
     e.preventDefault();  
@@ -150,7 +149,7 @@ const photoChange = (e) => {
         await setError(err);
         }, async () => {
           const newUrl = await storageRef.getDownloadURL();
-        setUrl([newUrl ]);
+        setUrl({newUrl});
         });
       }
      URL.revokeObjectURL(selected);   
