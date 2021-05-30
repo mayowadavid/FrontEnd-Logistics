@@ -90,7 +90,7 @@ const RequestContextProvider = (props) =>{
     const [sessionToken, setSessionToken] = useState();
     const [isLogin, setisLogin] = useState(false);
     const[temporaryImage, setTemporaryImage] = useState([]);
-    const [requestImages, setRequestImages] = useState([]);
+    const [requestImages, setRequestImages] = useState({});
     const [count, setCount] = useState();
     const [form, setForm] = useState();
     const [requestSuccess, setRequestSuccess] = useState(false);
@@ -101,12 +101,12 @@ const RequestContextProvider = (props) =>{
 
     useEffect ( () => {
                 if(url == {}){
-                    setRequestImages([])
+                    setRequestImages({})
         }else{
-            setRequestImages([...requestImages, {url}])
+            setRequestImages([...requestImages, {requestImages}])
         }
                    
-    }, [url]);
+    }, [requestImages]);
     
 
 
@@ -149,7 +149,7 @@ const photoChange = (e) => {
         await setError(err);
         }, async () => {
           const cloudUrl = await storageRef.getDownloadURL();
-        setUrl({cloudUrl});
+          setRequestImages({cloudUrl});
         });
       }
      URL.revokeObjectURL(selected);   
