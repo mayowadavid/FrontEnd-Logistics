@@ -1,4 +1,6 @@
 import SideButton from "../components/AdminRequest/sideButton";
+import BottomButton from "../components/AdminRequest/BottomButton";
+
 const Gallery = () => {
     return (
         <>
