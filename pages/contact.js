@@ -4,6 +4,7 @@ import { RequestContext } from "../components/context/RequestContext";
 import { AuthContext } from "../components/context/AuthContext";
 import SideButton from "../components/AdminRequest/sideButton";
 import AdminSignin from "../components/adminLogin/adminSignin";
+import BottomButton from "../components/AdminRequest/BottomButton";
 
 const Contact = () => {
        
@@ -110,10 +111,11 @@ const Contact = () => {
             }
         }
 
-  
+        setisLogin(true);
     
     return ( isLogin == true ? (<>
         <SideButton />
+        <BottomButton />
          {contactForm == 'active' ? createContact() : <> </> 
          } 
             <div className="shipping-request"> 

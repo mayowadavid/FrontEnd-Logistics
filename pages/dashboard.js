@@ -9,7 +9,7 @@ const Dashboard = () => {
 
   useEffect (async () => {
     const token = localStorage.getItem('token');
-      token !== undefined && (setisLogin(true))
+      token !== null && (setisLogin(true))
       console.log(token);
 
 }, []);

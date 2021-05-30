@@ -3,22 +3,19 @@ import SideButton from '../../../components/AdminRequest/sideButton';
 import RequestHandler from '../../../components/usersRequest/requestHandler';
 import { useContext, useEffect } from "react";
 import { RequestContext } from "../../..//components/context/RequestContext";
-import {generatePublicUrl} from '../../../urlConfig';
 import {useRouter} from 'next/router';
+import BottomButton from '../../../components/AdminRequest/BottomButton';
 
 const EachRequest = () => {
-        const{input, setInput, setPermanentImages} = useContext(RequestContext);
+        const{input, setInput, setRequestImages} = useContext(RequestContext);
        const router = useRouter();
        const {id} = router.query;
         
         useEffect ( () => {
-                
+                const {requestImages} = input;
                 input &&(
-                        input.requestImages[0].img !== undefined  && (
-                                setPermanentImages( input.requestImages.map(({img, _id})=> {
-                                        let changeUrl = generatePublicUrl(img);
-                                        return {img: changeUrl, _id }
-                                     }))
+                        requestImages[0].cloudUrl !== undefined  && (
+                                setRequestImages(requestImages)
                         )
                 )
                 
@@ -82,6 +79,7 @@ const EachRequest = () => {
 return (
         <>
         <SideButton />
+        <BottomButton />
         <div className="single-request">
         <RequestHandler />
         </div>

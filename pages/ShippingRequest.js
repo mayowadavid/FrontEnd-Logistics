@@ -6,6 +6,7 @@ import axios from '../helpers/axios';
 import SideButton from "../components/AdminRequest/sideButton";
 import { RequestContext } from "../components/context/RequestContext";
 import AdminSignin from "../components/adminLogin/adminSignin";
+import BottomButton from "../components/AdminRequest/BottomButton";
 
 
 const ShippingRequest = () => {
@@ -86,71 +87,72 @@ const ShippingRequest = () => {
                        return setInput(singleRequest);
                     }
             }
-      
+            setisLogin(true);
            
     return (isLogin == true ? (<div>
          <SideButton/>
+         <BottomButton />
             <div className="shipping-request">
                    {    updateShipping !== undefined ? updateShipping :
                            <>
-                           <div className="create-contact">
-                        <div className="add-button">
-                                <div onClick={()=> setPermanentImages([])}><Link href="/AdminRequest"><a><p >Create New</p></a></Link></div>
-                                <div><input type="text" id="search" name="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="search..."/></div>                 
-                        </div>
-                    </div>
-                    <div className="all-contact" >
-                            <div className="contact-head"> 
-                                    <div>
-                                        <select>
-                                                { requestOption.map(({options}) => 
-                                                        <option key={uuidv4()}>{options}</option>
-                                                )}
-                                        </select>
-                                        <input type="submit" value="Apply" />
-                                    </div>
-                                    <div>
-                                        <select>
-                                            <option>All dates</option>
-                                            <option>Date1</option>
-                                            <option>Date2</option>
-                                        </select>
-                                        <input type="submit" value="Filter" />
-                                    </div>
-                            </div>
-                            <div className="contact-header"> 
-                                <div>All|</div><div>Trash |</div><div>Pending Approval|</div><div>On hold|</div><div>Completed|</div><div>Refundeded|</div><div>Cancelled</div>
-                            </div>
-                    </div>
-                    <table className="contact-body">
-                        <thead> 
-                                <tr><td><input type="checkbox" /></td><td><strong>Name</strong></td><td>Date</td><td>Status</td><td>Total</td></tr>
-                        </thead>
-                        
-                        <tbody>
-                                {
-                                   extractedRequest !== undefined && ( extractedRequest.map(({tagName, updatedAt, status, _id, amount})=>
-                                   <tr key={uuidv4()} >   
-                                                  <td><input type="checkbox" /></td>
-                                                  {/* <td onClick={()=> requestData(_id)}><Link  href={`/SingleRequest/?id=${_id}`}><a>{tagName}</a></Link></td> */}
-                                                  <td><Link  href={`/EachRequest/${_id}`}><a>{tagName}</a></Link></td>
-                                                  <td>{getFormattedDate(updatedAt)}</td>
-                                                  <td>{status}</td>
-                                                  <td>{amount ? amount : "--"}</td> 
+                                <div className="create-contact">
+                                                <div className="add-button">
+                                                        <div onClick={()=> setPermanentImages([])}><Link href="/AdminRequest"><a><p >Create New</p></a></Link></div>
+                                                        <div><input type="text" id="search" name="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="search..."/></div>                 
+                                                </div>
+                                </div>
+                                <div className="all-contact" >
+                                        <div className="contact-head"> 
+                                                <div>
+                                                        <select>
+                                                                { requestOption.map(({options}) => 
+                                                                        <option key={uuidv4()}>{options}</option>
+                                                                )}
+                                                        </select>
+                                                        <input type="submit" value="Apply" />
+                                                </div>
+                                                <div>
+                                                        <select>
+                                                        <option>All dates</option>
+                                                        <option>Date1</option>
+                                                        <option>Date2</option>
+                                                        </select>
+                                                        <input type="submit" value="Filter" />
+                                                </div>
+                                        </div>
+                                        <div className="contact-header"> 
+                                                <div>All|</div><div>Trash |</div><div>Pending Approval|</div><div>On hold|</div><div>Completed|</div><div>Refundeded|</div><div>Cancelled</div>
+                                        </div>
+                                </div>
+                                <table className="contact-body">
+                                        <thead> 
+                                                <tr><td><input type="checkbox" /></td><td><strong>Name</strong></td><td>Date</td><td>Status</td><td>Total</td></tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                                {
+                                                extractedRequest !== undefined && ( extractedRequest.map(({tagName, updatedAt, status, _id, amount})=>
+                                                <tr key={uuidv4()} >   
+                                                                <td><input type="checkbox" /></td>
+                                                                {/* <td onClick={()=> requestData(_id)}><Link  href={`/SingleRequest/?id=${_id}`}><a>{tagName}</a></Link></td> */}
+                                                                <td><Link  href={`/EachRequest/${_id}`}><a>{tagName}</a></Link></td>
+                                                                <td>{getFormattedDate(updatedAt)}</td>
+                                                                <td>{status}</td>
+                                                                <td>{amount ? amount : "--"}</td> 
+                                                        </tr>
+                                                        ))
+                                                }
+                                        </tbody>
+                                        <tfoot> 
+                                        <tr> 
+                                                <td><input type="checkbox" /></td>
+                                                <td><strong>Name</strong></td>
+                                                <td>Date</td>
+                                                <td><strong>Completed</strong></td>
+                                                <td><strong>Total</strong></td>
                                         </tr>
-                                        ))
-                                }
-                        </tbody>
-                        <tfoot> 
-                        <tr> 
-                                <td><input type="checkbox" /></td>
-                                <td><strong>Name</strong></td>
-                                <td>Date</td>
-                                <td><strong>Completed</strong></td>
-                                <td><strong>Total</strong></td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                                        </tfoot>
+                                </table>
                     </>
                     }
                 </div>

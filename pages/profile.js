@@ -12,10 +12,11 @@ const Profile = () => {
     const{isLogin, setisLogin} = useContext(AuthContext); 
     const{profile, setProfile, setTemporaryImage} = useContext(ClientContext);
     const router = useRouter();
-
+  console.log(isLogin);
     useEffect (async () => {
         const token = localStorage && localStorage.getItem('token');
-        token !== undefined && (setisLogin(true))
+        console.log(token);
+        token !== null && (setisLogin(true))
             let res = await axios.post('profile/create', {}, { headers: {
                 'Authorization': 
                                     token ? `Bearer ${token}`: ''

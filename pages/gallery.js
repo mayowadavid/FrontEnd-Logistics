@@ -3,6 +3,7 @@ const Gallery = () => {
     return (
         <>
         <SideButton />
+        <BottomButton />
             <div className="gallery">
                 <div className="create-contact">
                     <div className="add-button">

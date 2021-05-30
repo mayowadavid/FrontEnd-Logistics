@@ -113,13 +113,11 @@ const AuthContextProvider = (props) => {
             }
             console.log(error.config);
           });
-          res !== undefined && (
-            setisLogin(true),
+         res && (res.status == 201 && (
             router.replace('/dashboard'),
             localStorage.setItem('token', res.data.token),
             console.log(success)
-            );
-            console.log(res);
+            ))
       }; 
 
       const handleLoginSubmit = async(e) => {
@@ -143,14 +141,12 @@ const AuthContextProvider = (props) => {
             }
             console.log(error.config);
           });
-      res && (
-            setAuthenticating(false),
-            setAuthenticate(true),
-            localStorage.setItem('token', res.data.token),
-            setisLogin(true),
-            router.replace('/dashboard'))
-        
-
+        res && (res.status == 200 && (
+                setAuthenticating(false),
+                setAuthenticate(true),
+                localStorage.setItem('token', res.data.token),
+                setisLogin(true),
+                router.replace('/dashboard')))
       }; 
       
       const handleAdminSubmit = async(e) => {
@@ -174,18 +170,19 @@ const AuthContextProvider = (props) => {
             }
             console.log(error.config);
           });
-        console.log(res);
-        if(res.status === 200){
-            setAuthenticating(false);
-            setAuthenticate(true);
-            setisLogin(true)
-            const {token, user}= res.data;
-            localStorage.setItem('token', token);
-            let message = "welcome";
-            setSuccess({...success, message, token, user});
-            router.replace('/contact');
-            return console.log(success);
-        }
+       
+        res && ( res.status == 200 && (
+          setAuthenticating(false),
+          setAuthenticate(true),
+          setisLogin(true),
+          token= res.data.token,
+          user= res.data.user,
+          localStorage.setItem('token', token),
+          message = "welcome",
+          setSuccess({...success, message, token, user}),
+          router.replace('/contact'),
+          console.log(success)
+        ))
       }; 
 
 

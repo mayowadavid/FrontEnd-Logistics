@@ -15,7 +15,7 @@ const Transaction = () => {
 
             useEffect (async () => {
                 const token = localStorage && localStorage.getItem('token');
-                token !== undefined && (setisLogin(true))
+                token !== null && (setisLogin(true))
                         let res = await axios.get('/request/userRequest', { headers: {
                                     'Authorization': 
                                     token ? `Bearer ${token}`: ''
@@ -46,7 +46,6 @@ const Transaction = () => {
                                         console.log(error.config);
                                       });
 
-                                      console.log(res);
 
                                       res && (
                                         res.data.userRequest  && (
