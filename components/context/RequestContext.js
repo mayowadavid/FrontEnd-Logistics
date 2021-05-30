@@ -103,7 +103,7 @@ const RequestContextProvider = (props) =>{
                 if(url == {}){
                     setRequestImages({})
         }else{
-            setRequestImages([...requestImages, ...{url}])
+            setRequestImages([...requestImages, {url}])
         }
                    
     }, [url]);
