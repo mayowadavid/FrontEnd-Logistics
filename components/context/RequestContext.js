@@ -100,10 +100,10 @@ const RequestContextProvider = (props) =>{
     const router = useRouter();
 
     useEffect ( () => {
-                if(url == ""){
+                if(url == {}){
                     setRequestImages([])
         }else{
-            setRequestImages([...requestImages, {cloudUrl: url}])
+            setRequestImages([...requestImages, {url}])
         }
                    
     }, [url]);
@@ -148,8 +148,8 @@ const photoChange = (e) => {
         },  async (err) => {
         await setError(err);
         }, async () => {
-          const newUrl = await storageRef.getDownloadURL();
-        setUrl({newUrl});
+          const cloudUrl = await storageRef.getDownloadURL();
+        setUrl({cloudUrl});
         });
       }
      URL.revokeObjectURL(selected);   
