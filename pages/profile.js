@@ -5,13 +5,13 @@ import UserLogin from '../components/userLogin/userLogin';
 import axios from '../helpers/axios';
 import React, { useEffect, useContext} from 'react';
 import {generatePublicUrl} from '../urlConfig';
-import {useRouter} from 'next/router';
+
 
 const Profile = () => {
 
     const{isLogin, setisLogin} = useContext(AuthContext); 
     const{profile, setProfile, setTemporaryImage} = useContext(ClientContext);
-    const router = useRouter();
+   
   console.log(isLogin);
     useEffect (async () => {
         const token = localStorage && localStorage.getItem('token');

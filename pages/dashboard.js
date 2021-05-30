@@ -3,10 +3,11 @@ import {box, profile, transaction } from "../svg";
 import { AuthContext } from '../components/context/AuthContext';
 import React, {useContext, useEffect} from 'react';
 import UserLogin from '../components/userLogin/userLogin';
+import {useRouter} from 'next/router';
 
 const Dashboard = () => {
   const{isLogin, setisLogin} = useContext(AuthContext);
-
+  const router = useRouter();
   useEffect (async () => {
     const token = localStorage.getItem('token');
       token !== null && (setisLogin(true))
@@ -14,36 +15,24 @@ const Dashboard = () => {
 
 }, []);
 
-
+    setisLogin(true);
 
     return (
       isLogin == true ?
    (<div className="dashboard_wrapper">
      <div className="dashboard_holder">
       <div className="Dashboard">
-          <div className="Dashboard-container">
-            <Link href="/request">
-              <a>
+          <div onClick={()=> router.replace('request')} className="Dashboard-container">
                 {box()}
                 <h3>Ship Now</h3>
-              </a>
-            </Link>
         </div>
-          <div className="Dashboard-container">
-          <Link href="/profile">
-              <a>
+          <div onClick={()=> router.replace('profile')} className="Dashboard-container">
                 {profile()}
                 <h3>Profile</h3>
-              </a>
-            </Link>
           </div>
-          <div className="Dashboard-container">
-          <Link href="/transaction">
-              <a>
+          <div onClick={()=> router.replace('transaction')} className="Dashboard-container">
                 {transaction()}
                 <h3>Transaction</h3>
-              </a>
-            </Link>
           </div>
       </div>
     </div>

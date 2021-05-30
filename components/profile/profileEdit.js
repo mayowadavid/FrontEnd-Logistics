@@ -1,16 +1,21 @@
 import React, {useContext} from 'react';
 import { ClientContext } from '../context/ClientContext';
-import {avatar} from "../../svg";
+import {avatar, Back} from "../../svg";
+import {useRouter} from 'next/router';
+
 
 
 const ProfileEdit = () => {
 
     const { handleProfileChange , handleProfilePreview, profile, temporaryImage, profileImage, profileDetails} = useContext(ClientContext);
-
+    const router = useRouter();
     const {formErrors} = profile;
     console
     return (
       <div className="profile-wrapper">
+            <div onClick={()=> router.replace('dashboard')} className="back">
+                    {Back()}
+            </div>
             <div  className="user-profile">
             <div className="profile-avatar">
               {

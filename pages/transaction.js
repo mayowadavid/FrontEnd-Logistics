@@ -5,6 +5,7 @@ import { ClientContext } from "../components/context/ClientContext";
 import { AuthContext } from "../components/context/AuthContext";
 import UserLogin from '../components/userLogin/userLogin';
 import {useRouter} from 'next/router';
+import {Back } from "../svg";
 
 
 const Transaction = () => {
@@ -67,6 +68,9 @@ const Transaction = () => {
       
            
     return (isLogin == true ? (<div>
+            <div onClick={()=> router.replace('dashboard')} className="back">
+                    {Back()}
+            </div>
             <div className="transaction_table">
                     <div className="transaction_wrapper">
                    {    

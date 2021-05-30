@@ -4,6 +4,7 @@ import React, {useContext} from 'react';
 import SimpleSlider from '../slider';
 
 
+
 const RequestPreview = () => {
 
     const {input, setCount, handleFormSubmit} = useContext(RequestContext);

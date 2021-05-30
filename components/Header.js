@@ -1,7 +1,10 @@
 import axios from '../pages/api/axios'
 import Link from 'next/link';
 import {useRouter} from 'next/router';
+import { AuthContext } from './context/AuthContext';
+import React, {useContext} from 'react';
 const Header = () => {
+  const {isLogin} = useContext(AuthContext);
 
   const router = useRouter();
     const signout = async(e) => {
@@ -31,10 +34,8 @@ const Header = () => {
 
     return (
             <div className="header">
-                 <div><Link href="/dashboard"><a>G4 logistics</a></Link></div>
-                <div><Link href="/login"><a> login</a></Link></div>
-                <div><Link href="/signup"><a> Sign up</a></Link></div>
-                 <div onClick={signout}><a> Sign Out</a></div>
+                 <div className="logo"><Link href="/dashboard"><a>G4 logistics</a></Link></div>
+                 {isLogin? <div><Link href="/login"><a> login</a></Link></div> :  <div onClick={signout}><a> Sign Out</a></div>}
             </div>
         
     )
