@@ -685,12 +685,20 @@ input[type=text]{
       .dynamic-header a {
         font-size: 5vw;
       }
+      .dynamic-name a {
+        font-size: 5vw;
+      }.dynamic-login a {
+        font-size: 5vw;
+      }
       .dynamic-header > div {
         padding: 3vw;
       }
       
       .header-bar {
         height: 11vw;
+      }
+      .header-bar a{
+        font-size: 5vw;
       }
       .header-bar > div {
         padding: 3vw;
