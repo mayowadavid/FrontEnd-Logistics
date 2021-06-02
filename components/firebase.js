@@ -15,5 +15,5 @@ const firebaseConfig = {
   const firebaseApp = !firebase.apps.length ? firebase.initializeApp(firebaseConfig) :firebase.app();
   const store = firebaseApp.storage();
  
-  export {store};
+  export default store;
  
