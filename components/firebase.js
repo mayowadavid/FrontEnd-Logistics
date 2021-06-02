@@ -12,11 +12,9 @@ const firebaseConfig = {
     appId: "1:22905502977:web:248fd426a1ce4497336f00"
   };
 
-  const database = firebase.firestore();
   const firebaseApp = !firebase.apps.length ? firebase.initializeApp(firebaseConfig) :firebase.app();
   const store = firebaseApp.storage();
-  
+  const database = firebase.firestore();
  
-  export {store};  
-  export default database;
+  export {store, database};  
  
