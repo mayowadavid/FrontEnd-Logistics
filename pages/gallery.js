@@ -1,9 +1,11 @@
 import SideButton from "../components/AdminRequest/sideButton";
 import BottomButton from "../components/AdminRequest/BottomButton";
+import AdminHeader from "../components/AdminHeader";
 
 const Gallery = () => {
     return (
         <>
+        <AdminHeader />
         <SideButton />
         <BottomButton />
             <div className="gallery">

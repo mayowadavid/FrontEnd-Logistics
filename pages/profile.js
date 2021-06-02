@@ -4,7 +4,7 @@ import { ClientContext } from '../components/context/ClientContext';
 import UserLogin from '../components/userLogin/userLogin';
 import axios from '../helpers/axios';
 import React, { useEffect, useContext} from 'react';
-import {generatePublicUrl} from '../urlConfig';
+import DynamicHeader from '../components/DynamicHeader';
 
 
 const Profile = () => {
@@ -64,9 +64,10 @@ const Profile = () => {
                 )
   
     }, []);
-
+    setisLogin(true)
     return ( isLogin == true  ?
           (<>
+             <DynamicHeader />
               <ProfileHandler />
           </>): <UserLogin />
     )}

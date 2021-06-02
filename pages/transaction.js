@@ -4,15 +4,13 @@ import axios from '../helpers/axios';
 import { ClientContext } from "../components/context/ClientContext";
 import { AuthContext } from "../components/context/AuthContext";
 import UserLogin from '../components/userLogin/userLogin';
-import {useRouter} from 'next/router';
-import {Back } from "../svg";
+import DynamicHeader from "../components/DynamicHeader";
 
 
 const Transaction = () => {
   
         const{isLogin, setisLogin} = useContext(AuthContext); 
         const{transaction, setTransaction} = useContext(ClientContext); 
-        const router = useRouter();
 
             useEffect (async () => {
                 const token = localStorage && localStorage.getItem('token');
@@ -65,12 +63,10 @@ const Transaction = () => {
           
                 return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
           };
-      
+      setisLogin(true);
            
     return (isLogin == true ? (<div>
-            <div onClick={()=> router.replace('dashboard')} className="back">
-                    {Back()}
-            </div>
+            <DynamicHeader />
             <div className="transaction_table">
                     <div className="transaction_wrapper">
                    {    

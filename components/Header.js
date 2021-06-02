@@ -35,7 +35,7 @@ const Header = () => {
     return (
             <div className="header">
                  <div className="logo"><Link href="/dashboard"><a>G4 logistics</a></Link></div>
-                 {isLogin? <div><Link href="/login"><a> login</a></Link></div> :  <div onClick={signout}><a> Sign Out</a></div>}
+                 {isLogin? <div className="login"><Link href="/login"><a> login</a></Link></div> :  <div className="login" onClick={signout}><a> Sign Out</a></div>}
             </div>
         
     )
