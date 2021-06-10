@@ -3,7 +3,7 @@ import axios from '../../helpers/axios';
 import {gallery, message, offBack, contact} from "../../svg";
 import { requestValidate } from '../validator/validate';
 import {useRouter} from 'next/router';
-import {store} from '../firebase';
+import {auth, store, database, timestamp} from '../firebase';
 
 export const RequestContext = createContext();
 
@@ -57,33 +57,67 @@ const RequestContextProvider = (props) =>{
         deliveryLocations: "lagos",
         descriptions: "thank you",
         itemsWorth: "5000",
-        receiver: {firstName: "David", phoneNumber1: "07130614615", phoneNumber2: "08130614915"},
-        sender: {firstName: "mayowa", phoneNumber1: "08130614615", phoneNumber2: "08140614615"},
+        receiverFirstName: 'mayowa',
+        receiverPhoneNumber1: '08087536643',
+        receiverPhoneNumber2: '08130614615',
+        requestImages: [],
+        senderFirstName: 'jony',
+        senderPhoneNumber1: '08130614615',
+        senderPhoneNumber2: '08130614615',
         tagName: "chisom",
         otherItems: false,
-        _id: undefined,
         formErrors: {
-            sender: {
-                    firstName: '',
-                    phoneNumber1: '',
-                    phoneNumber2: '' },
-            receiver: {
-                    firstName: '',
-                    phoneNumber1: '',
-                    phoneNumber2: '' },
+            senderFirstName: '',
+            senderPhoneNumber1: '',
+            senderPhoneNumber2: '',
+            receiverFirstName: '',
+            receiverPhoneNumber1: '',
+            receiverPhoneNumber2: '',
             cartons: '',
             createdAt: '',
             deliveryLocations: '',
             descriptions: '',
             itemsWorth: '',
             otherItems: true,
-            requestImages: '',
             status: '',
             tagName: '',
-            amount: '',
-            requestImages: [{img: ''}],
+            amount: ''
             }
         };
+        
+        // const initialState =
+        // {cartons: "55",
+        // deliveryLocations: "lagos",
+        // descriptions: "thank you",
+        // itemsWorth: "5000",
+        // receiver: {firstName: "David", phoneNumber1: "07130614615", phoneNumber2: "08130614915"},
+        // sender: {firstName: "mayowa", phoneNumber1: "08130614615", phoneNumber2: "08140614615"},
+        // tagName: "chisom",
+        // otherItems: false,
+        // _id: undefined,
+        // formErrors: {
+        //     sender: {
+        //             firstName: '',
+        //             phoneNumber1: '',
+        //             phoneNumber2: '' },
+        //     receiver: {
+        //             firstName: '',
+        //             phoneNumber1: '',
+        //             phoneNumber2: '' },
+        //     cartons: '',
+        //     createdAt: '',
+        //     deliveryLocations: '',
+        //     descriptions: '',
+        //     itemsWorth: '',
+        //     otherItems: true,
+        //     requestImages: '',
+        //     status: '',
+        //     tagName: '',
+        //     amount: '',
+        //     requestImages: [{img: ''}],
+        //     }
+        // };
+
     const[input, setInput] = useState(initialState);
     const [contacts, setContacts] = useState([]);
     const [extractedRequest, setExtractedRequest] = useState();
@@ -97,19 +131,17 @@ const RequestContextProvider = (props) =>{
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
     const router = useRouter();
-
+    const [loading, setLoading] = useState(false);
+    const [userId, setUserId] = useState('');
     
-    
-
 
     const handleChange = (e) => {
         if(e){
-           const {sender} = {...input};
+           e.preventDefault();
            const {name, value, id} = e.target;
            const {formErrors} = {...input};
            requestValidate(id, value, formErrors);
-           sender[name] = e.target.value;
-           const newInput = { ...input, sender, [name]: value };
+           const newInput = { ...input, [name]: value };
            return setInput(newInput);
         }
     }; 
@@ -118,11 +150,23 @@ const RequestContextProvider = (props) =>{
     const newInput = {...input, [name]: checked};
     return setInput(newInput);
    } 
+   useEffect (()=> {
+    progress == 100 && setLoading(false);
+    setProgress(0);
+   }, [progress])
 
+   useEffect (()=> {
+    auth.onAuthStateChanged(user=>{
+      user !== null 
+        setUserId(user.uid)
+    })
+   }, [])
 
 const photoChange = (e) => {
-    e.preventDefault();  
+    e.preventDefault(); 
+    
    if(e.target.files){
+    progress !== 100 && setLoading(true) 
      let selected = e.target.files[0];
     let types = ['image/jpeg', 'image/png'];
    let fileType = selected !== undefined ? types.includes(selected.type): setError("unsupported image type* accepted image jpg/png");
@@ -147,58 +191,35 @@ const photoChange = (e) => {
      URL.revokeObjectURL(selected);   
     }
 };
-    
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage && localStorage.getItem('token');
-        const res = await axios.post('/request/create', input, {
-            headers : {'authorization': token ? `Bearer ${token}` : ''}
-        }).catch(function (error) {
-            if (error.response) {
-              // The request was made and the server responded with a status code
-              // that falls out of the range of 2xx
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-              error.response.status && (
-                error.response.status == '500' || '400' && (
-                  axios.post('/signout'),
-                  localStorage.clear(),
-                  router.replace('/login')
-                )
-              )
-            } else if (error.request) {
-              // The request was made but no response was received
-              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-              // http.ClientRequest in node.js
-              console.log(error.request);
-            } else {
-              // Something happened in setting up the request that triggered an Error
-              console.log('Error', error.message);
+        const { cartons,
+        deliveryLocations,
+        descriptions,
+        itemsWorth,
+        receiverFirstName,
+        receiverPhoneNumber1,
+        receiverPhoneNumber2,
+        requestImages,
+        senderFirstName,
+        senderPhoneNumber1,
+        senderPhoneNumber2,
+        tagName,
+        otherItems} = input;
+
+       userId !== null && database.collection('Requests').add({ userId, cartons, deliveryLocations, descriptions, itemsWorth, receiverFirstName, receiverPhoneNumber1,
+          receiverPhoneNumber2, requestImages, senderFirstName, senderPhoneNumber1, senderPhoneNumber2, tagName, otherItems, createdAt: timestamp()})
+          .then((data) => {
+              data && (setRequestSuccess(true));
+          })
+          .catch(
+            (error) => {
+              setError(error)
             }
-            console.log(error.config);
-          });
-          console.log(res)
-          res && (
-              res.status == 201 && (
-                  console.log(res),
-                  setRequestSuccess(true)
-              )
           )
     };
 
-    const handleReceiver = (e) => {
-            
-        if(e){
-            const {receiver} = {...input};
-            const {name, id, value} = e.target;
-            const {formErrors} = {...input};
-            requestValidate(id, value, formErrors)
-            receiver[name] = e.target.value;
-            const newInp = { ...input, receiver };
-            return setInput(newInp);
-        }
-    }; 
 
     const handleRequestUpdate = async(e, id) => {
         e.preventDefault();
@@ -212,7 +233,6 @@ const photoChange = (e) => {
         setCount("active");
     }
 
-    console.log(input);
 
 
 
@@ -225,7 +245,7 @@ const photoChange = (e) => {
 
 
     return (
-        <RequestContext.Provider value={{input, error, requestImages, requestSuccess, setRequestSuccess, initialState, setCount, count, setInput, handleChange, handleReceiver, handleCheck, temporaryImage, handleFormSubmit, handleFormPreview, photoChange, selector, setExtractedRequest, extractedRequest, contacts, setContacts, handleRequestUpdate, sessionToken, isLogin, setisLogin}}>
+        <RequestContext.Provider value={{input, error, loading, setRequestImages, requestImages, requestSuccess, setRequestSuccess, initialState, setCount, count, setInput, handleChange, handleCheck, temporaryImage, handleFormSubmit, handleFormPreview, photoChange, selector, setExtractedRequest, extractedRequest, contacts, setContacts, handleRequestUpdate, sessionToken, isLogin, setisLogin}}>
             {props.children}
         </RequestContext.Provider>
     )

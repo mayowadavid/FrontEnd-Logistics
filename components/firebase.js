@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/firestore';
+import 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: "AIzaSyACIDeiqQIHextjTi28NVDmh5hWHahuiNE",
@@ -13,8 +14,27 @@ const firebaseConfig = {
   };
 
   const firebaseApp = !firebase.apps.length ? firebase.initializeApp(firebaseConfig) :firebase.app();
-  const store = firebaseApp.storage();
   const database = firebase.firestore();
+  if(process.browser){
+    database.enablePersistence()
+      .catch(function(err) {
+          if (err.code == 'failed-precondition') {
+              // Multiple tabs open, persistence can only be enabled
+              // in one tab at a a time.
+              // ...
+              console.log(err.code);
+          } else if (err.code == 'unimplemented') {
+              // The current browser does not support all of the
+              // features required to enable persistence
+              // ...
+              console.log(err.code);
+          }
+      });
+    }
+  const store = firebaseApp.storage();
+  const auth = firebase.auth();
+  const timestamp = firebase.firestore.FieldValue.serverTimestamp;
+
  
-  export {store, database};  
+  export {store, database, auth, timestamp};  
  

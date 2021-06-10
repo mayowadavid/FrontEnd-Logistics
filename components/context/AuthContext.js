@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import axios from '../../helpers/axios';
 import { loginValidate, singupValidate } from '../validator/validate';
 import {useRouter} from 'next/router';
+import { auth, database } from '../firebase';
 
 
 
@@ -25,7 +26,7 @@ const AuthContextProvider = (props) => {
           password: '',
       }
     });
-    const [profile, setProfile] = useState();
+    
 
     const [login, setLogin] = useState({
         email: '',
@@ -50,6 +51,13 @@ const AuthContextProvider = (props) => {
           role: '',
           _id: ''} 
       });
+
+      useEffect(()=>{
+        auth.onAuthStateChanged(user=>{
+          user == null ? setisLogin(false) : setisLogin(true);
+          console.log(user)
+        })
+      }, [])
 
       const signout = async(e) => {
         e.preventDefault();
@@ -95,58 +103,32 @@ const AuthContextProvider = (props) => {
 
     const handleSignupSubmit = async(e) => {
         e.preventDefault();
-        const res = await axios.post('/signup', signup).catch(function (error) {
-            if (error.response) {
-              // The request was made and the server responded with a status code
-              // that falls out of the range of 2xx
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.request) {
-              // The request was made but no response was received
-              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-              // http.ClientRequest in node.js
-              console.log(error.request);
-            } else {
-              // Something happened in setting up the request that triggered an Error
-              console.log('Error', error.message);
-            }
-            console.log(error.config);
-          });
-         res && (res.status == 201 && (
-            router.replace('/dashboard'),
-            localStorage.setItem('token', res.data.token),
-            console.log(success)
-            ))
-      }; 
+        const {firstName, lastName, email, phoneNumber, password} = signup;
+        auth.createUserWithEmailAndPassword(email, password).then(cred =>{
+          return database.collection('Profile').doc(cred.user.uid).set({
+            phoneNumber, email, firstName, lastName
+          })}
+        ).then(()=>{
+          setisLogin(true);
+          router.replace('dashboard');
+        } )
+    }
+    
+    const handleSignout = (e) => {
+      e.preventDefault();
+      const {firstName, lastName, email, phoneNumber, password} = signup;
+      auth.signOut()
+  
+  }
 
-      const handleLoginSubmit = async(e) => {
+      const handleLoginSubmit = (e) => {
         e.preventDefault();
         setAuthenticating(true);
-        const res = await axios.post('/signin', login).catch(function (error) {
-            if (error.response) {
-              // The request was made and the server responded with a status code
-              // that falls out of the range of 2xx
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.request) {
-              // The request was made but no response was received
-              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-              // http.ClientRequest in node.js
-              console.log(error.request);
-            } else {
-              // Something happened in setting up the request that triggered an Error
-              console.log('Error', error.message);
-            }
-            console.log(error.config);
-          });
-        res && (res.status == 200 && (
-                setAuthenticating(false),
-                setAuthenticate(true),
-                localStorage.setItem('token', res.data.token),
-                setisLogin(true),
-                router.replace('/dashboard')))
+        const {email, password } = login;
+        auth.signInWithEmailAndPassword(email, password).then(()=>{
+        setisLogin(true);
+        router.replace('dashboard');
+          })
       }; 
       
       const handleAdminSubmit = async(e) => {
@@ -185,7 +167,7 @@ const AuthContextProvider = (props) => {
 
 
     return (
-        <AuthContext.Provider value={{sessionToken, signout, setSessionToken, login, signup, isLogin, setisLogin, handleLoginChange, handleSignupChange, handleSignupSubmit, handleLoginSubmit, handleAdminSubmit}}>
+        <AuthContext.Provider value={{sessionToken, signout, setSessionToken, login, signup, isLogin, setisLogin, handleLoginChange, handleSignupChange, handleSignout, handleSignupSubmit, handleLoginSubmit, handleAdminSubmit}}>
             {props.children}
         </AuthContext.Provider>
     );

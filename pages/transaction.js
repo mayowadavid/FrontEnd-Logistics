@@ -1,69 +1,41 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4} from 'uuid';
 import axios from '../helpers/axios';
 import { ClientContext } from "../components/context/ClientContext";
 import { AuthContext } from "../components/context/AuthContext";
 import UserLogin from '../components/userLogin/userLogin';
 import DynamicHeader from "../components/DynamicHeader";
+import {auth, database} from "../components/firebase";
+import { profile } from "../svg";
 
 
 const Transaction = () => {
   
-        const{isLogin, setisLogin} = useContext(AuthContext); 
+        const{isLogin} = useContext(AuthContext); 
         const{transaction, setTransaction} = useContext(ClientContext); 
 
-            useEffect (async () => {
-                const token = localStorage && localStorage.getItem('token');
-                token !== null && (setisLogin(true))
-                        let res = await axios.get('/request/userRequest', { headers: {
-                                    'Authorization': 
-                                    token ? `Bearer ${token}`: ''
-                                }}).catch(function (error) {
-                                        if (error.response) {
-                                          // The request was made and the server responded with a status code
-                                          // that falls out of the range of 2xx
-                                          console.log(error.response.data);
-                                          console.log(error.response.status);
-                                          console.log(error.response.headers);
-                                          error.response.status && (
-                                                error.response.status == '500' || '400' && (
-                                                  axios.post('/signout'),
-                                                  localStorage.clear(),
-                                                  setisLogin(false),
-                                                 router.replace('/login')
-                                                )
-                                              )
-                                        } else if (error.request) {
-                                          // The request was made but no response was received
-                                          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                                          // http.ClientRequest in node.js
-                                          console.log(error.request);
-                                        } else {
-                                          // Something happened in setting up the request that triggered an Error
-                                          console.log('Error', error.message);
-                                        }
-                                        console.log(error.config);
-                                      });
-
-
-                                      res && (
-                                        res.data.userRequest  && (
-                                            setTransaction([...res.data.userRequest])
-                                        ) )
-                        
+            useEffect (() => {
+                    const data = [];
+                auth.onAuthStateChanged(user=>{
+                        user !== null && database.collection('Requests')
+                        .where("userId", "==", user.uid)
+                        .get().then((querySnapshot) => {
+                                querySnapshot.forEach((doc) => {
+                                    // doc.data() is never undefined for query doc snapshots
+                                    data.push(doc.data())
+                                });
+                            });
+                      })
+                      setTransaction(data);
         }, []);
 
 
         const getFormattedDate = (dateString) => {
-                if (!dateString) {
-                  return "";
-                }
-          
-                const date = new Date(dateString);
-          
-                return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+                if (dateString !== undefined ) {
+                        const date = dateString !== undefined && new Date(dateString.toDate());
+                        return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+                } 
           };
-      setisLogin(true);
            
     return (isLogin == true ? (<div>
             <DynamicHeader />

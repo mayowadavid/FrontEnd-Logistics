@@ -6,15 +6,10 @@ import UserLogin from '../components/userLogin/userLogin';
 import {useRouter} from 'next/router';
 
 const Dashboard = () => {
-  const{isLogin, setisLogin} = useContext(AuthContext);
+  const{isLogin} = useContext(AuthContext);
   const router = useRouter();
-  useEffect (async () => {
-    const token = localStorage.getItem('token');
-      token !== null && (setisLogin(true))
-      console.log(token);
-
-}, []);
-
+  
+console.log(isLogin);
 
     return (
       isLogin == true ?

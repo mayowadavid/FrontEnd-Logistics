@@ -1,20 +1,21 @@
 import { object } from 'prop-types';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import axios from '../../helpers/axios';
 import {generatePublicUrl} from '../../urlConfig';
 import { profileValidate } from '../validator/validate';
-import {store} from '../firebase';
+import {auth, store, database} from '../firebase';
 
 export const ClientContext = createContext();
 
 const ClientContextProvider = (props) => {
 
     const initialState = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '', 
-      address: '',
+      firstName: 'mayor',
+      lastName: 'james',
+      email: 'mayowadavid100@gmail.com',
+      phoneNumber: '09087536643', 
+      address: 'abule foli',
+      profileImage: '',
       formErrors: {
         firstName: '',
         lastName: '',
@@ -25,6 +26,20 @@ const ClientContextProvider = (props) => {
     }
 
     const [profile, setProfile] = useState(initialState);
+    const [data, setData] = useState();
+    useEffect(()=>{
+      auth.onAuthStateChanged(user=>{
+        user !== null && database.collection('Profile').doc(user.uid).get().then(doc=>
+          setData(doc.data())
+        );
+      })
+    }, [])
+    
+
+    useEffect(()=>{
+      const {formErrors} = initialState;
+      data !== undefined && setProfile({...data, formErrors})
+    }, [data])
 
 
     // .type !== Format[0] || Format[1] || Format[2]) && (profileImage.size <= Format[2] || profileImage.size <= Format[3])
@@ -75,23 +90,34 @@ const ClientContextProvider = (props) => {
 
   const handleProfileSubmit = async(e) => {
     e.preventDefault();
-    const token = localStorage && localStorage.getItem('token');
-    let res = await axios.post('/profile/update', profile, { headers: {
-      'Authorization': token ? `Bearer ${token}`: ''
-  }});
-    if(res.status == 201){
-      const {updatedProfile} = res.data;
-      const {profileImage} = updatedProfile;
-     setTemporaryImage(profileImage);
-    }
-    ;
+    const {firstName,
+    lastName,
+    email,
+    phoneNumber, 
+    address,
+    profileImage}= profile;
+    database.collection('Profile').add({firstName,
+      lastName,
+      email,
+      phoneNumber, 
+      address,
+      profileImage})
+  //   const token = localStorage && localStorage.getItem('token');
+  //   let res = await axios.post('/profile/update', profile, { headers: {
+  //     'Authorization': token ? `Bearer ${token}`: ''
+  // }});
+  //   if(res.status == 201){
+  //     const {updatedProfile} = res.data;
+  //     const {profileImage} = updatedProfile;
+  //    setTemporaryImage(profileImage);
+  //   }
+  //   ;
   }; 
-
+  
 
   const handleProfilePreview = (e) => {
     e.preventDefault();
-    let newProfile = {...profile, profileImage}
-    setProfile(newProfile);
+    setProfile({...profile, profileImage});
     setCount('active');
   }
 

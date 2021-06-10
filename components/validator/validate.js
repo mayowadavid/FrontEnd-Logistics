@@ -26,22 +26,22 @@ export const requestValidate = ( id, value, formErrors ) => {
 
 	switch (id) {
 		case "senderFirstName":
-			formErrors.sender.firstName = value.length < 3 && value.length > 0 ? '*minimum 3 characters required*': '';
+			formErrors.senderFirstName = value.length < 3 && value.length > 0 ? '*minimum 3 characters required*': '';
 			break;
 		case "senderphoneNumber1":
-			formErrors.sender.phoneNumber1 = value.length < 11 && value.length > 0 ? '*minimum 3 characters required*': '';
+			formErrors.senderPhoneNumber1 = value.length < 11 && value.length > 0 ? '*minimum 3 characters required*': '';
 			break;
 		case "senderphoneNumber2":
-			formErrors.sender.phoneNumber2 = value.length < 11 && value.length > 0 ? '*minimum 3 characters required*': '';
+			formErrors.senderPhoneNumber2 = value.length < 11 && value.length > 0 ? '*minimum 3 characters required*': '';
 			break;
 		case "receiverFirstname":
-			formErrors.receiver.firstName = value.length < 3 && value.length > 0 ? '*minimum 3 characters required*': '';
+			formErrors.receiverFirstName = value.length < 3 && value.length > 0 ? '*minimum 3 characters required*': '';
 			break;
 		case "receiverphoneNumber1":
-			formErrors.receiver.phoneNumber1 = value.length < 11 && value.length > 0 ? '*minimum 3 characters required*': '';
+			formErrors.receiverPhoneNumber1 = value.length < 11 && value.length > 0 ? '*minimum 3 characters required*': '';
 			break;
 		case "receiverphoneNumber2":
-			formErrors.receiver.phoneNumber2 = value.length < 11 && value.length > 0 ? '*minimum 3 characters required*': '';
+			formErrors.receiverPhoneNumber2 = value.length < 11 && value.length > 0 ? '*minimum 3 characters required*': '';
 			break;
 		case "tagName":
 			formErrors.tagName = value.length < 2 && value.length > 0 ? '*minimum 3 characters required*': '';

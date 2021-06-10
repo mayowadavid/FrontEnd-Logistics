@@ -16,12 +16,15 @@ const ProfilePreview = () => {
                     <p>{profile.phoneNumber}</p>       
                     <p>{profile.address}</p>
                     <div className="submit" >
-                    { profile._id ? (
+                    <div className="submit">
+                        <input type="submit" onClick={(e) =>handleProfileSubmit(e)} value="update"/>
+                    </div>
+                    {/* { profile._id ? (
                     <div className="submit">
                         <input type="submit" onClick={(e) =>handleProfileSubmit(e)} value="update"/>
                     </div>): (<div className="submit">
                         <input type="submit" value="edit"/>
-                    </div>) }
+                    </div>) } */}
                     </div>   
                 </div> 
         </div> )

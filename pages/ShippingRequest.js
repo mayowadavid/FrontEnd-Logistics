@@ -7,6 +7,8 @@ import SideButton from "../components/AdminRequest/sideButton";
 import { RequestContext } from "../components/context/RequestContext";
 import AdminSignin from "../components/adminLogin/adminSignin";
 import BottomButton from "../components/AdminRequest/BottomButton";
+import { database } from "../components/firebase";
+import DynamicBottom from "../components/AdminRequest/DynamicBottom";
 
 
 const ShippingRequest = () => {
@@ -27,33 +29,14 @@ const ShippingRequest = () => {
             
 
             useEffect (async () => {
-                const token = localStorage && localStorage.getItem('token')
-                        let res = await axios.get('/request/get', { headers: {
-                                    'Authorization': 
-                                    token ? `Bearer ${token}`: ''
-                                }}).catch(function (error) {
-                                        if (error.response) {
-                                          // The request was made and the server responded with a status code
-                                          // that falls out of the range of 2xx
-                                          console.log(error.response.data);
-                                          console.log(error.response.status);
-                                          console.log(error.response.headers);
-                                        } else if (error.request) {
-                                          // The request was made but no response was received
-                                          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                                          // http.ClientRequest in node.js
-                                          console.log(error.request);
-                                        } else {
-                                          // Something happened in setting up the request that triggered an Error
-                                          console.log('Error', error.message);
-                                        }
-                                        console.log(error.config);
-                                      });
-                       res && (
-                            res.data.user.role == 'admin' && ( setisLogin(true)),
-                            setExtractedRequest(res.data.request)
-                            )
-                        
+                    database.collection('Requests')
+                    .onSnapshot(snap => {
+                        let documents = [];
+                        snap.forEach(doc => {
+                          documents.push({...doc.data(), id: doc.id});
+                        });
+                        setExtractedRequest(documents)
+                    })
         }, []);
 
          const getFormattedDate = (dateString) => {
@@ -88,8 +71,8 @@ const ShippingRequest = () => {
                     }
             }
            
-           
-    return (isLogin == true ? (<div>
+           setisLogin(true);
+    return (isLogin == true ? (<>
          <SideButton/>
          <BottomButton />
             <div className="shipping-request">
@@ -131,11 +114,11 @@ const ShippingRequest = () => {
                                         
                                         <tbody>
                                                 {
-                                                extractedRequest !== undefined && ( extractedRequest.map(({tagName, updatedAt, status, _id, amount})=>
+                                                extractedRequest !== undefined && ( extractedRequest.map(({tagName, updatedAt, status, id, amount})=>
                                                 <tr key={uuidv4()} >   
                                                                 <td><input type="checkbox" /></td>
                                                                 {/* <td onClick={()=> requestData(_id)}><Link  href={`/SingleRequest/?id=${_id}`}><a>{tagName}</a></Link></td> */}
-                                                                <td><Link  href={`/EachRequest/${_id}`}><a>{tagName}</a></Link></td>
+                                                                <td><Link  href={`/EachRequest/${id}`}><a>{tagName}</a></Link></td>
                                                                 <td>{getFormattedDate(updatedAt)}</td>
                                                                 <td>{status}</td>
                                                                 <td>{amount ? amount : "--"}</td> 
@@ -156,7 +139,8 @@ const ShippingRequest = () => {
                     </>
                     }
                 </div>
-        </div>) : (<AdminSignin />)
+                <DynamicBottom />
+        </>) : (<AdminSignin />)
     )
 }  
 export default ShippingRequest;

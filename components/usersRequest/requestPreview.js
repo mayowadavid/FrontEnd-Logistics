@@ -20,17 +20,17 @@ const RequestPreview = () => {
                     <div className="sender-container" >
                     <h3>Sender information</h3>
                         <div className="sender">
-                        <p>{input.sender.firstName}</p>
-                            <p>{input.sender.phoneNumber1}</p>
-                        <p>{input.sender.phoneNumber2}</p>
+                        <p>{input.senderFirstName}</p>
+                            <p>{input.senderPhoneNumber1}</p>
+                        <p>{input.senderPhoneNumber2}</p>
                         </div>
                     </div>
                     <div className="receiver-container">
                         <h3>Receiver information</h3>
                         <div  className="receiver">
-                        <p>{input.receiver.firstName}</p>
-                        <p>{input.receiver.phoneNumber1}</p>
-                        <p>{input.receiver.phoneNumber2}</p>
+                        <p>{input.receiverFirstName}</p>
+                        <p>{input.receiverPhoneNumber1}</p>
+                        <p>{input.receiverPhoneNumber2}</p>
                         </div>
                     </div>
                     <div className="others">

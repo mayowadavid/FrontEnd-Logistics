@@ -1,7 +1,9 @@
 import { v4 as uuidv4} from 'uuid';
-import {upload} from "../../svg";
+import {upload, Loader} from "../../svg";
 import {RequestContext} from '../context/RequestContext';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
+
+
 
 
 
@@ -9,7 +11,7 @@ import React, {useContext, useState} from 'react';
 
 const AddRequest = () => {
    
-    const {input, error, handleChange, handleReceiver, handleCheck, temporaryImage, requestImages, handleFormPreview, photoChange, handleRequestUpdate, setCount} = useContext(RequestContext);
+    const {input, error, loading, handleChange, handleCheck, temporaryImage, requestImages, handleFormPreview, photoChange, handleRequestUpdate, setCount} = useContext(RequestContext);
 
     const [statusOption, setStatusOption] = useState([
         {options: "pending"}, 
@@ -19,31 +21,51 @@ const AddRequest = () => {
         {options: "completed"}
     ])
 
-    const [action, setAction] = useState()
-
-    const photoSource = () => {
-       
-        if(temporaryImage || requestImages ){
-            return(<> {temporaryImage.map(({imageSource}) => 
-            <img src={imageSource} key={uuidv4()} />
-            ) }
-                <div className="add-image">
-                    <label htmlFor="file">
-                        <input type="file" name="img" onChange={photoChange} id="file" />
-                        {upload()}<h4>Upload Images</h4>
-                    </label> 
-                </div>
-                </>)
-        }else{
-           return ( <div className="add-image">
-           <label htmlFor="file">
-               <input type="file" name="img" onChange={photoChange} id="file" />
-               {upload()}<h4>Upload Images</h4>
-           </label> 
-       </div> )
-        }
+    
+    
+    // const photoSource = () => {
+    //     const {requestImages} = input;
+    //     console.log(requestImages.cloudUrl);
+    //     <>
+    //         {requestImages.cloudUrl !== undefined && (requestImages.map(cloudUrl=>
+    //             <img src={cloudUrl} key={uuidv4()} />
+    //             ))}
+    //             {loading == false ? 
+    //             <div className="add-image"> 
+    //                     {Loader()}<h4>Uploading...</h4>
+    //             </div>: 
+    //             <div className="add-image">
+    //                 <label htmlFor="file">
+    //                     <input type="file" name="img" onChange={photoChange} id="file" />
+    //                     {upload()}<h4>Upload Images</h4>
+    //                 </label> 
+    //             </div>}
+    //     </>
+    //     // if(requestImages == [] ){
+    //     //     return(<>
+    //     //         {temporaryImage.map(({imageSource}) => 
+    //     //     <img src={imageSource} key={uuidv4()} />
+    //     //     ) }
+    //     //          <div className="add-image">
+    //     //     <label htmlFor="file">
+    //     //         <input type="file" name="img" onChange={photoChange} id="file" />
+    //     //         {upload()}<h4>Upload Images</h4>
+    //     //     </label> 
+    //     // </div></> )
+    //     // }else{
+    //     //    return (<> {requestImages.map(({cloudUrl}) => 
+    //     //    <img src={cloudUrl} key={uuidv4()} />
+    //     //    ) }
+    //     //        <div className="add-image">
+    //     //            <label htmlFor="file">
+    //     //                <input type="file" name="img" onChange={photoChange} id="file" />
+    //     //                {upload()}<h4>Upload Images</h4>
+    //     //            </label> 
+    //     //        </div>
+    //     //        </>)
+    //     // }
         
-    }
+    // }
 
     
 
@@ -63,19 +85,24 @@ const AddRequest = () => {
     }
 
     const {formErrors } = {...input}
-
+        
     return (
           <>
-           
               <div className="photo">
-                    {temporaryImage ? photoSource() : 
-                              <div className="add-image">
-                              <label htmlFor="file">
-                                  <input type="file" name="img" onChange={photoChange} id="file" />
-                                  {upload()}<h4>Upload Images</h4>
-                              </label> 
-                          </div>
-                    }
+              {requestImages[0] !== undefined && (requestImages.map(({cloudUrl})=>(
+                <img src={cloudUrl} key={uuidv4()} />)
+                ))}
+                {loading == false ? 
+                <div className="add-image">
+                    <label htmlFor="file">
+                        <input type="file" name="img" onChange={photoChange} id="file" />
+                        {upload()}<h4>Upload Images</h4>
+                    </label> 
+                 </div>:
+                <div className="add-image"> 
+                        {Loader()}<h4>Uploading...</h4>
+                </div>
+                }
               </div>
               
           <form onSubmit={  input._id ? (e)=> handleRequestUpdate(e, input._id) : (e)=>  handleFormPreview(e) }>
@@ -84,23 +111,23 @@ const AddRequest = () => {
                   <div className="sender">
                   <p>
                     <label htmlFor="senderFirstName">First Name</label>
-                    <input type="text" onChange={handleChange  } id="senderFirstName"  name="firstName" value={input.sender.firstName} placeholder="Your name.."/>
-                    {formErrors.sender.firstName.length > 0  && (
-                        <span className="errorMessage">{formErrors.sender.firstName}</span>
+                    <input type="text" onChange={handleChange  } id="senderFirstName"  name="senderFirstName" value={input.senderFirstName} placeholder="Your name.."/>
+                    {formErrors.senderFirstName.length > 0  && (
+                        <span className="errorMessage">{formErrors.senderFirstName}</span>
                     )}
                     </p>
                     <p>
                     <label htmlFor="senderPhoneNumber1">Phone Number1</label>
-                    <input type="number" id="senderphoneNumber1" onChange={handleChange  } name="phoneNumber1" value={input.sender.phoneNumber1}  placeholder="Your PhoneNumber.."/>
-                    {formErrors.sender.phoneNumber1.length > 0  && (
-                        <span className="errorMessage">{formErrors.sender.firstName}</span>
+                    <input type="number" id="senderphoneNumber1" onChange={handleChange  } name="senderPhoneNumber1" value={input.senderPhoneNumber1}  placeholder="Your PhoneNumber.."/>
+                    {formErrors.senderPhoneNumber1.length > 0  && (
+                        <span className="errorMessage">{formErrors.senderPhoneNumber1}</span>
                     )}
                     </p>
                     <p>
                     <label htmlFor="senderphoneNumber2">Phone Number 2</label>
-                    <input type="number" id="senderphoneNumber2" onChange={handleChange } name="phoneNumber2" value={input.sender.phoneNumber2}  placeholder="Your phoneNumber2.."/>
-                    {formErrors.sender.phoneNumber2.length > 0  && (
-                        <span className="errorMessage">{formErrors.sender.firstName}</span>
+                    <input type="number" id="senderphoneNumber2" onChange={handleChange } name="senderPhoneNumber2" value={input.senderPhoneNumber2}  placeholder="Your phoneNumber2.."/>
+                    {formErrors.senderPhoneNumber2.length > 0  && (
+                        <span className="errorMessage">{formErrors.senderPhoneNumber2}</span>
                     )}
                     </p>
                   </div>
@@ -110,23 +137,23 @@ const AddRequest = () => {
                   <div  className="receiver">
                     <p>
                     <label htmlFor="receiverFirstname">First Name</label>
-                    <input type="text" id="receiverFirstname" onChange={handleReceiver} name="firstName" value={input.receiver.firstName} placeholder="Your name.."/>
-                    {formErrors.receiver.firstName.length > 0  && (
-                        <span className="errorMessage">{formErrors.receiver.firstName}</span>
+                    <input type="text" id="receiverFirstname" onChange={handleChange} name="receiverFirstName" value={input.receiverFirstName} placeholder="Your name.."/>
+                    {formErrors.receiverFirstName.length > 0  && (
+                        <span className="errorMessage">{formErrors.receiverFirstName}</span>
                     )}
                     </p>
                     <p>
                     <label htmlFor="receiverPhoneNumber1">Phone Number1</label>
-                    <input type="number" id="receiverphoneNumber1" onChange={handleReceiver} name="phoneNumber1" value={input.receiver.phoneNumber1} placeholder="Your PhoneNumber.."/>
-                    {formErrors.receiver.phoneNumber1.length > 0  && (
-                        <span className="errorMessage">{formErrors.receiver.phoneNumber1}</span>
+                    <input type="number" id="receiverphoneNumber1" onChange={handleChange} name="receiverPhoneNumber1" value={input.receiverPhoneNumber1} placeholder="Your PhoneNumber.."/>
+                    {formErrors.receiverPhoneNumber1.length > 0  && (
+                        <span className="errorMessage">{formErrors.receiverPhoneNumber1}</span>
                     )}
                     </p>
                     <p>
                     <label htmlFor="receiverphoneNumber2">Phone Number 2</label>
-                    <input type="number" id="receiverphoneNumber2" onChange={handleReceiver} name="phoneNumber2" value={input.receiver.phoneNumber2} placeholder="Your phoneNumber2.."/>
-                    {formErrors.receiver.phoneNumber2.length > 0  && (
-                        <span className="errorMessage">{formErrors.receiver.phoneNumber2}</span>
+                    <input type="number" id="receiverphoneNumber2" onChange={handleChange} name="receiverPhoneNumber2" value={input.receiverPhoneNumber2} placeholder="Your phoneNumber2.."/>
+                    {formErrors.receiverPhoneNumber2.length > 0  && (
+                        <span className="errorMessage">{formErrors.receiverPhoneNumber2}</span>
                     )}
                     </p>
                   </div>
