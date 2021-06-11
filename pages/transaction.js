@@ -12,22 +12,9 @@ import { profile } from "../svg";
 const Transaction = () => {
   
         const{isLogin} = useContext(AuthContext); 
-        const{transaction, setTransaction} = useContext(ClientContext); 
+        const{transaction} = useContext(ClientContext); 
 
-            useEffect (() => {
-                    const data = [];
-                auth.onAuthStateChanged(user=>{
-                        user !== null && database.collection('Requests')
-                        .where("userId", "==", user.uid)
-                        .get().then((querySnapshot) => {
-                                querySnapshot.forEach((doc) => {
-                                    // doc.data() is never undefined for query doc snapshots
-                                    data.push(doc.data())
-                                });
-                            });
-                      })
-                      setTransaction(data);
-        }, []);
+            
 
 
         const getFormattedDate = (dateString) => {

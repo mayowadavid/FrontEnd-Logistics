@@ -1,7 +1,4 @@
-import { object } from 'prop-types';
 import React, { createContext, useState, useEffect } from 'react';
-import axios from '../../helpers/axios';
-import {generatePublicUrl} from '../../urlConfig';
 import { profileValidate } from '../validator/validate';
 import {auth, store, database} from '../firebase';
 
@@ -34,15 +31,27 @@ const ClientContextProvider = (props) => {
         );
       })
     }, [])
+
+    useEffect (() => {
+      const data = [];
+      auth.onAuthStateChanged(user=>{
+              user !== null && database.collection('Requests')
+              .where("userId", "==", user.uid)
+              .onSnapshot((querySnapshot) => {
+                      querySnapshot.forEach((doc) => {
+                          // doc.data() is never undefined for query doc snapshots
+                          data.push(doc.data())
+                      });
+                  });
+            })
+            setTransaction(data);
+}, []);
     
 
     useEffect(()=>{
       const {formErrors} = initialState;
       data !== undefined && setProfile({...data, formErrors})
     }, [data])
-
-
-    // .type !== Format[0] || Format[1] || Format[2]) && (profileImage.size <= Format[2] || profileImage.size <= Format[3])
 
     const [profileImage, setProfileImage] = useState();
     const[temporaryImage, setTemporaryImage]= useState();
@@ -102,16 +111,6 @@ const ClientContextProvider = (props) => {
       phoneNumber, 
       address,
       profileImage})
-  //   const token = localStorage && localStorage.getItem('token');
-  //   let res = await axios.post('/profile/update', profile, { headers: {
-  //     'Authorization': token ? `Bearer ${token}`: ''
-  // }});
-  //   if(res.status == 201){
-  //     const {updatedProfile} = res.data;
-  //     const {profileImage} = updatedProfile;
-  //    setTemporaryImage(profileImage);
-  //   }
-  //   ;
   }; 
   
 

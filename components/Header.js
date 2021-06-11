@@ -1,6 +1,4 @@
-import axios from '../pages/api/axios'
 import Link from 'next/link';
-import {useRouter} from 'next/router';
 import { AuthContext } from './context/AuthContext';
 import React, {useContext} from 'react';
 const Header = () => {

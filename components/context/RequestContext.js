@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from 'react';
-import axios from '../../helpers/axios';
 import {gallery, message, offBack, contact} from "../../svg";
 import { requestValidate } from '../validator/validate';
 import {useRouter} from 'next/router';
@@ -8,49 +7,6 @@ import {auth, store, database, timestamp} from '../firebase';
 export const RequestContext = createContext();
 
 const RequestContextProvider = (props) =>{
-    // const initialState =
-    //     {sender: {
-    //         firstName: '',
-    //         phoneNumber1: '',
-    //         phoneNumber2: '' },
-    //    receiver: {
-    //            firstName: '',
-    //            phoneNumber1: '',
-    //            phoneNumber2: '' },
-    //    cartons: '',
-    //    createdAt: '',
-    //    deliveryLocations: '',
-    //    descriptions: '',
-    //    itemsWorth: '',
-    //    otherItems: true,
-    //    requestImages: [{img: '',
-    //                     _id: ''}],
-    //     status: '',
-    //     tagName: '',
-    //     amount: '',
-    //     _id: '',
-    //     formErrors: {
-    //                 sender: {
-    //                         firstName: '',
-    //                         phoneNumber1: '',
-    //                         phoneNumber2: '' },
-    //                 receiver: {
-    //                         firstName: '',
-    //                         phoneNumber1: '',
-    //                         phoneNumber2: '' },
-    //                 cartons: '',
-    //                 createdAt: '',
-    //                 deliveryLocations: '',
-    //                 descriptions: '',
-    //                 itemsWorth: '',
-    //                 otherItems: true,
-    //                 requestImages: '',
-    //                 status: '',
-    //                 tagName: '',
-    //                 amount: ''
-    //                 }
-           
-    //    };
 
     const initialState =
         {cartons: "55",
@@ -84,39 +40,7 @@ const RequestContextProvider = (props) =>{
             amount: ''
             }
         };
-        
-        // const initialState =
-        // {cartons: "55",
-        // deliveryLocations: "lagos",
-        // descriptions: "thank you",
-        // itemsWorth: "5000",
-        // receiver: {firstName: "David", phoneNumber1: "07130614615", phoneNumber2: "08130614915"},
-        // sender: {firstName: "mayowa", phoneNumber1: "08130614615", phoneNumber2: "08140614615"},
-        // tagName: "chisom",
-        // otherItems: false,
-        // _id: undefined,
-        // formErrors: {
-        //     sender: {
-        //             firstName: '',
-        //             phoneNumber1: '',
-        //             phoneNumber2: '' },
-        //     receiver: {
-        //             firstName: '',
-        //             phoneNumber1: '',
-        //             phoneNumber2: '' },
-        //     cartons: '',
-        //     createdAt: '',
-        //     deliveryLocations: '',
-        //     descriptions: '',
-        //     itemsWorth: '',
-        //     otherItems: true,
-        //     requestImages: '',
-        //     status: '',
-        //     tagName: '',
-        //     amount: '',
-        //     requestImages: [{img: ''}],
-        //     }
-        // };
+       
 
     const[input, setInput] = useState(initialState);
     const [contacts, setContacts] = useState([]);
@@ -192,6 +116,8 @@ const photoChange = (e) => {
     }
 };
 
+console.log(requestImages);
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         const { cartons,
@@ -223,8 +149,7 @@ const photoChange = (e) => {
 
     const handleRequestUpdate = async(e, id) => {
         e.preventDefault();
-       setInput(...input, requestImages);
-        const res = await axios.put('/request/' + id, input);
+       setInput(...input, requestImages)
     }
 
     const handleFormPreview = (e) => {

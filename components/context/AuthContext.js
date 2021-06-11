@@ -55,7 +55,6 @@ const AuthContextProvider = (props) => {
       useEffect(()=>{
         auth.onAuthStateChanged(user=>{
           user == null ? setisLogin(false) : setisLogin(true);
-          console.log(user)
         })
       }, [])
 

@@ -16,7 +16,7 @@ const RequestPreview = () => {
                 <SimpleSlider /> 
                 <form onSubmit={input._id == undefined ?  handleFormSubmit : ()=> setCount()}>
     
-                <div>
+                <div className="request-preview">
                     <div className="sender-container" >
                     <h3>Sender information</h3>
                         <div className="sender">

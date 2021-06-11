@@ -95,7 +95,7 @@ const AddRequest = () => {
                 {loading == false ? 
                 <div className="add-image">
                     <label htmlFor="file">
-                        <input type="file" name="img" onChange={photoChange} id="file" />
+                        <input type="file" name="img" onChange={photoChange} id="file"  accept="/.jpg, .png, gif" />
                         {upload()}<h4>Upload Images</h4>
                     </label> 
                  </div>:
