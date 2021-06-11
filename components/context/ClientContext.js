@@ -7,11 +7,11 @@ export const ClientContext = createContext();
 const ClientContextProvider = (props) => {
 
     const initialState = {
-      firstName: 'mayor',
-      lastName: 'james',
-      email: 'mayowadavid100@gmail.com',
-      phoneNumber: '09087536643', 
-      address: 'abule foli',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '', 
+      address: '',
       profileImage: '',
       formErrors: {
         firstName: '',

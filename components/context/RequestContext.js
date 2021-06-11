@@ -9,18 +9,18 @@ export const RequestContext = createContext();
 const RequestContextProvider = (props) =>{
 
     const initialState =
-        {cartons: "55",
-        deliveryLocations: "lagos",
-        descriptions: "thank you",
-        itemsWorth: "5000",
-        receiverFirstName: 'mayowa',
-        receiverPhoneNumber1: '08087536643',
-        receiverPhoneNumber2: '08130614615',
+        {cartons: "",
+        deliveryLocations: "",
+        descriptions: "",
+        itemsWorth: "",
+        receiverFirstName: '',
+        receiverPhoneNumber1: '',
+        receiverPhoneNumber2: '',
         requestImages: [],
-        senderFirstName: 'jony',
-        senderPhoneNumber1: '08130614615',
-        senderPhoneNumber2: '08130614615',
-        tagName: "chisom",
+        senderFirstName: '',
+        senderPhoneNumber1: '',
+        senderPhoneNumber2: '',
+        tagName: "",
         otherItems: false,
         formErrors: {
             senderFirstName: '',
@@ -116,7 +116,6 @@ const photoChange = (e) => {
     }
 };
 
-console.log(requestImages);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -137,7 +136,8 @@ console.log(requestImages);
        userId !== null && database.collection('Requests').add({ userId, cartons, deliveryLocations, descriptions, itemsWorth, receiverFirstName, receiverPhoneNumber1,
           receiverPhoneNumber2, requestImages, senderFirstName, senderPhoneNumber1, senderPhoneNumber2, tagName, otherItems, createdAt: timestamp()})
           .then((data) => {
-              data && (setRequestSuccess(true));
+              data && (setRequestSuccess(true),
+              setInput(initialState));
           })
           .catch(
             (error) => {

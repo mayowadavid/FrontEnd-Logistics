@@ -121,7 +121,10 @@ const AuthContextProvider = (props) => {
   }
 
   const handleSocialLogin = (e) => {
-    auth.signInWithPopup(provider).then((result) => console.log(result))
+    auth.signInWithPopup(provider).then(()=>{
+      setisLogin(true);
+      router.replace('dashboard');
+        })
   }
 
       const handleLoginSubmit = (e) => {
