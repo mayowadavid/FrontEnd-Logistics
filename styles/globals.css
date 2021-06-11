@@ -53,6 +53,40 @@ html, body{
   text-align: right;
   margin-right: 3vw;
 }
+.social-login {
+    color: #000;
+    padding: 1vw 20px;
+    margin: auto;
+    width: 60%;
+    text-align: center;
+}
+
+.social-login span {
+  margin: 1vw;
+}
+
+.social-login > button {
+  display: flex;
+  border: 1px solid blue;
+  cursor: pointer;
+  margin: 2vw auto;
+  font-weight: bold;
+  padding: 2.5px;
+}
+
+.social-login > button > span {
+  font-weight: bold;
+  color: #000;
+}
+
+.social-login > button > span {
+  margin: 0.5vw;
+}
+
+.google {
+  width: 15px;
+  height: auto;
+}
 
 .header  {
   display: flex;

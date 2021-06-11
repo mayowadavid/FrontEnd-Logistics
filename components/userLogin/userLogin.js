@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { Google } from '../../svg';
 
 const UserLogin = () => {
 
-    const {login,  handleLoginChange, handleLoginSubmit} = useContext(AuthContext);
+    const {login,  handleLoginChange, handleLoginSubmit, handleSocialLogin} = useContext(AuthContext);
     const {formErrors} = login;
 
     return (
@@ -29,6 +30,10 @@ const UserLogin = () => {
                 </p>
               <div className="submit">
                  <input type="submit" value="login"/>
+              </div>
+              <div className="social-login" onClick={handleSocialLogin}>
+                    <span>or sign in with</span>
+                    <button><span>{Google()}</span><span>Google</span></button>
               </div>
           </form>
         </div>

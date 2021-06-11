@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import axios from '../../helpers/axios';
 import { loginValidate, singupValidate } from '../validator/validate';
 import {useRouter} from 'next/router';
-import { auth, database } from '../firebase';
+import { auth, database, provider } from '../firebase';
 
 
 
@@ -120,6 +120,10 @@ const AuthContextProvider = (props) => {
   
   }
 
+  const handleSocialLogin = (e) => {
+    auth.signInWithPopup(provider).then((result) => console.log(result))
+  }
+
       const handleLoginSubmit = (e) => {
         e.preventDefault();
         setAuthenticating(true);
@@ -166,7 +170,7 @@ const AuthContextProvider = (props) => {
 
 
     return (
-        <AuthContext.Provider value={{sessionToken, signout, setSessionToken, login, signup, isLogin, setisLogin, handleLoginChange, handleSignupChange, handleSignout, handleSignupSubmit, handleLoginSubmit, handleAdminSubmit}}>
+        <AuthContext.Provider value={{sessionToken, signout, setSessionToken, login, signup, isLogin, setisLogin, handleLoginChange, handleSocialLogin, handleSignupChange, handleSignout, handleSignupSubmit, handleLoginSubmit, handleAdminSubmit}}>
             {props.children}
         </AuthContext.Provider>
     );
