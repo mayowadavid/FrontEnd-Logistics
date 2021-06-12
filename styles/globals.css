@@ -676,6 +676,12 @@ input[type=text]{
     margin: 0 !important;
     padding: 4vw !important;
   }
+
+  .request-slider img {
+    width: auto;
+    height: calc(20vh);
+    border-radius: 1vh;
+    }
     
   .upload {
     width: 12vw;
@@ -944,6 +950,7 @@ input[type=text]{
     border-color: #f3f3f2;
     box-shadow: 0 1px 3px rgb(0 0 0 / 13%);
   }
+
 
   /*  admin */
 
