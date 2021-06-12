@@ -43,7 +43,7 @@ const ClientContextProvider = (props) => {
       auth.onAuthStateChanged(user=>{
               user !== null && database.collection('Requests')
               .where("userId", "==", user.uid)
-              .onSnapshot((querySnapshot) => {
+              .get().then((querySnapshot) => {
                       querySnapshot.forEach((doc) => {
                           // doc.data() is never undefined for query doc snapshots
                           let documents = doc.data();
