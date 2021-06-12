@@ -1,20 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4} from 'uuid';
-import axios from '../helpers/axios';
 import { ClientContext } from "../components/context/ClientContext";
 import { AuthContext } from "../components/context/AuthContext";
 import UserLogin from '../components/userLogin/userLogin';
 import DynamicHeader from "../components/DynamicHeader";
-import {auth, database} from "../components/firebase";
-import { profile } from "../svg";
+import { useRouter } from 'next/router';
+
 
 
 const Transaction = () => {
   
         const{isLogin} = useContext(AuthContext); 
         const{transaction} = useContext(ClientContext); 
-
-            
+        const router = useRouter();
+        useEffect(()=>{
+                router.prefetch('/transaction')
+              }, [])
 
 
         const getFormattedDate = (dateString) => {

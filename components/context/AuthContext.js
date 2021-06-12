@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from '../../helpers/axios';
 import { loginValidate, singupValidate } from '../validator/validate';
 import {useRouter} from 'next/router';
 import { auth, database, provider } from '../firebase';
@@ -58,31 +57,7 @@ const AuthContextProvider = (props) => {
         })
       }, [])
 
-      const signout = async(e) => {
-        e.preventDefault();
-          const res = await axios.post('/signout').catch(function (error) {
-              if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log(error.request);
-              } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-              }
-              console.log(error.config);
-            });
-          localStorage.clear();
          
-          router.replace('/login');
-      }
-
     const handleLoginChange = (e) => {
         const {name, value} = e.target;
         const{formErrors} = login;
@@ -115,16 +90,30 @@ const AuthContextProvider = (props) => {
     
     const handleSignout = (e) => {
       e.preventDefault();
-      const {firstName, lastName, email, phoneNumber, password} = signup;
-      auth.signOut()
-  
+      auth.signOut();
   }
 
   const handleSocialLogin = (e) => {
-    auth.signInWithPopup(provider).then(()=>{
-      setisLogin(true);
-      router.replace('dashboard');
-        })
+    auth.signInWithPopup(provider).then((result) => {
+      /** @type {firebase.auth.OAuthCredential} */
+      var credential = result.credential;
+      console.log(result);
+  
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
   }
 
       const handleLoginSubmit = (e) => {
@@ -137,43 +126,12 @@ const AuthContextProvider = (props) => {
           })
       }; 
       
-      const handleAdminSubmit = async(e) => {
-        e.preventDefault();
-        setAuthenticating(true);
-        const res = await axios.post('/admin/signin', login).catch(function (error) {
-            if (error.response) {
-              // The request was made and the server responded with a status code
-              // that falls out of the range of 2xx
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.request) {
-              // The request was made but no response was received
-              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-              // http.ClientRequest in node.js
-              console.log(error.request);
-            } else {
-              // Something happened in setting up the request that triggered an Error
-              console.log('Error', error.message);
-            }
-            console.log(error.config);
-          });
-       if(res && res.status == 200){
-        setAuthenticating(false);
-        setAuthenticate(true);
-        setisLogin(true);
-       const {token, user}= res.data;
-        localStorage.setItem('token', token);
-        let message = "welcome";
-        setSuccess({...success, message, token, user});
-        router.replace('/contact');
-       }
-      }; 
+      
 
 
 
     return (
-        <AuthContext.Provider value={{sessionToken, signout, setSessionToken, login, signup, isLogin, setisLogin, handleLoginChange, handleSocialLogin, handleSignupChange, handleSignout, handleSignupSubmit, handleLoginSubmit, handleAdminSubmit}}>
+        <AuthContext.Provider value={{sessionToken, setSessionToken, login, signup, isLogin, setisLogin, handleLoginChange, handleSocialLogin, handleSignupChange, handleSignout, handleSignupSubmit, handleLoginSubmit}}>
             {props.children}
         </AuthContext.Provider>
     );

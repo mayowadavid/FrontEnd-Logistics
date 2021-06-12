@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 
 const AdminSignin = () => {
     
-  const {login,  handleLoginChange, handleAdminSubmit} = useContext(AuthContext);
+  const {login,  handleLoginChange} = useContext(AuthContext);
   const {formErrors} = login;
 
   return (

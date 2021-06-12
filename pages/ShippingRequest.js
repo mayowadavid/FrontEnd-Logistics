@@ -2,7 +2,6 @@ import RequestHandler from "../components/usersRequest/requestHandler";
 import { useContext, useState, useEffect } from "react";
 import { v4 as uuidv4} from 'uuid';
 import Link from 'next/link';
-import axios from '../helpers/axios';
 import SideButton from "../components/AdminRequest/sideButton";
 import { RequestContext } from "../components/context/RequestContext";
 import AdminSignin from "../components/adminLogin/adminSignin";
@@ -62,16 +61,10 @@ const ShippingRequest = () => {
                     return setUpdateShipping(<RequestHandler />)
             }
 
-            const requestData = async(id) => {
-                let res = await axios.get('/request/' + id);
-                if(res.status == 201){
-                        const {singleRequest} = res.data;
-                        setCount('action');
-                       return setInput(singleRequest);
-                    }
+            const requestData = (id) => {
+                
             }
            
-           setisLogin(true);
     return (isLogin == true ? (<>
          <SideButton/>
          <BottomButton />

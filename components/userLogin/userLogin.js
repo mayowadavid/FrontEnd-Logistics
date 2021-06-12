@@ -31,11 +31,11 @@ const UserLogin = () => {
               <div className="submit">
                  <input type="submit" value="login"/>
               </div>
+          </form>
               <div className="social-login" onClick={handleSocialLogin}>
                     <span>or sign in with</span>
                     <button><span>{Google()}</span><span>Google</span></button>
               </div>
-          </form>
         </div>
         <h5 className="login-tag">Forgot password?</h5> 
         <div className="tag">

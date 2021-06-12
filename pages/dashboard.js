@@ -9,7 +9,6 @@ const Dashboard = () => {
   const{isLogin} = useContext(AuthContext);
   const router = useRouter();
   
-console.log(isLogin);
 
     return (
       isLogin == true ?

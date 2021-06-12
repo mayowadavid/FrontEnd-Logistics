@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { profileValidate } from '../validator/validate';
 import {auth, store, database} from '../firebase';
+import { useRouter } from 'next/router';
 
 export const ClientContext = createContext();
 
@@ -21,7 +22,7 @@ const ClientContextProvider = (props) => {
         address: ''
       }
     }
-
+    const router = useRouter();
     const [profile, setProfile] = useState(initialState);
     const [data, setData] = useState();
     const [profileImage, setProfileImage] = useState();
@@ -43,7 +44,7 @@ const ClientContextProvider = (props) => {
       auth.onAuthStateChanged(user=>{
               user !== null && database.collection('Requests')
               .where("userId", "==", user.uid)
-              .onSnapshot((querySnapshot) => {
+              .get().then((querySnapshot) => {
                       querySnapshot.forEach((doc) => {
                           // doc.data() is never undefined for query doc snapshots
                           let documents = doc.data();
@@ -55,7 +56,9 @@ const ClientContextProvider = (props) => {
             setTransaction(data);
 }, []);
 
-
+useEffect(()=>{
+  router.prefetch('/transaction')
+}, [])
     
 
     useEffect(()=>{
@@ -63,8 +66,6 @@ const ClientContextProvider = (props) => {
       data !== undefined && setProfile({...data, formErrors})
     }, [data])
 
-    
-    console.log(transaction);
 
     const handleProfileChange = (e) => {
         e.preventDefault();  

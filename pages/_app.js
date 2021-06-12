@@ -1,7 +1,7 @@
 // Main CSS
 import Layout from '../components/Layout'
 import '../styles/globals.css';
-import 'slick-carousel/slick/slick.css';
+
 
 function MyApp({ Component, pageProps }) {
   return (
