@@ -36,14 +36,15 @@ const Transaction = () => {
                         
                         <tbody>
                                 {
-                                   transaction !== [] && ( transaction.map(({tagName, createdAt, status, id, amount})=>
-                                   <tr key={uuidv4()} >   
+                                   transaction !== [] && ( transaction.map(({documents, id})=>{
+                                           let{tagName, createdAt, status, amount} = documents;
+                                          return (<tr key={uuidv4()} >   
                                                   <td>{tagName}</td>
                                                   <td>{getFormattedDate(createdAt)}</td>
                                                   <td>{status}</td>
                                                   <td>{id}</td>
                                                   <td>{amount ? amount : "--"}</td> 
-                                        </tr>
+                                        </tr>)}
                                         ))
                                 }
                         </tbody>

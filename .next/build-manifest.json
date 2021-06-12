@@ -24,10 +24,15 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/request": [
+    "/next/dist/pages/_error": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/request.js"
+      "static/chunks/pages/next/dist/pages/_error.js"
+    ],
+    "/transaction": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/chunks/pages/transaction.js"
     ]
   },
   "ampFirstPages": []

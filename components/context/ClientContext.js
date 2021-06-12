@@ -24,6 +24,12 @@ const ClientContextProvider = (props) => {
 
     const [profile, setProfile] = useState(initialState);
     const [data, setData] = useState();
+    const [profileImage, setProfileImage] = useState();
+    const[temporaryImage, setTemporaryImage]= useState();
+    const [count, setCount] = useState();
+    const [transaction, setTransaction] = useState([]);
+    const [error, setError] = useState(null);
+    const [progress, setProgress] = useState(0);
     useEffect(()=>{
       auth.onAuthStateChanged(user=>{
         user !== null && database.collection('Profile').doc(user.uid).get().then(doc=>
@@ -40,14 +46,16 @@ const ClientContextProvider = (props) => {
               .onSnapshot((querySnapshot) => {
                       querySnapshot.forEach((doc) => {
                           // doc.data() is never undefined for query doc snapshots
-                          let docta = doc.data;
+                          let documents = doc.data();
                           let id = doc.id;
-                          data.push(docta, id)
+                          data.push({documents, id})
                       });
                   });
             })
             setTransaction(data);
 }, []);
+
+
     
 
     useEffect(()=>{
@@ -55,12 +63,8 @@ const ClientContextProvider = (props) => {
       data !== undefined && setProfile({...data, formErrors})
     }, [data])
 
-    const [profileImage, setProfileImage] = useState();
-    const[temporaryImage, setTemporaryImage]= useState();
-    const [count, setCount] = useState();
-    const [transaction, setTransaction] = useState([]);
-    const [error, setError] = useState(null);
-    const [progress, setProgress] = useState(0);
+    
+    console.log(transaction);
 
     const handleProfileChange = (e) => {
         e.preventDefault();  
