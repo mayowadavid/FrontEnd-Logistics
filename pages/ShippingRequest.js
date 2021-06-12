@@ -19,12 +19,11 @@ const ShippingRequest = () => {
                 {options: "Change status to completed"}
             ]);
         
-            const{extractedRequest, setExtractedRequest, setCount, input, initialState, setInput, setPermanentImages, sessionToken, isLogin, setisLogin} = useContext(RequestContext);
+            const{extractedRequest, setExtractedRequest, setCount, input, initialState, setInput, setPermanentImages, isLogin} = useContext(RequestContext);
 
             const [q, setQ] = useState(""); 
 
             const [updateShipping, setUpdateShipping] = useState();
-            console.log(sessionToken);
             
 
             useEffect (async () => {

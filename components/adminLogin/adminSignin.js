@@ -12,7 +12,7 @@ const AdminSignin = () => {
     <div className="form_container">
         <div className="overall-form">
         <div  className="former">
-        <form onSubmit={handleAdminSubmit}>
+        <form >
             <p>
             <label htmlFor="email">Email</label>
             <input type="text" onChange={handleLoginChange} id="email" name="email" placeholder="Your name.."/>

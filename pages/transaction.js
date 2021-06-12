@@ -4,7 +4,6 @@ import { ClientContext } from "../components/context/ClientContext";
 import { AuthContext } from "../components/context/AuthContext";
 import UserLogin from '../components/userLogin/userLogin';
 import DynamicHeader from "../components/DynamicHeader";
-import { useRouter } from 'next/router';
 
 
 
@@ -12,11 +11,6 @@ const Transaction = () => {
   
         const{isLogin} = useContext(AuthContext); 
         const{transaction} = useContext(ClientContext); 
-        const router = useRouter();
-        useEffect(()=>{
-                router.prefetch('/transaction')
-              }, [])
-
 
         const getFormattedDate = (dateString) => {
                 if (dateString !== undefined ) {
