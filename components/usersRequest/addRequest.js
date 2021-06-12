@@ -1,7 +1,7 @@
 import { v4 as uuidv4} from 'uuid';
 import {upload, Loader} from "../../svg";
 import {RequestContext} from '../context/RequestContext';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 
 
 
@@ -20,52 +20,6 @@ const AddRequest = () => {
         {options: "onHold"},
         {options: "completed"}
     ])
-
-    
-    
-    // const photoSource = () => {
-    //     const {requestImages} = input;
-    //     console.log(requestImages.cloudUrl);
-    //     <>
-    //         {requestImages.cloudUrl !== undefined && (requestImages.map(cloudUrl=>
-    //             <img src={cloudUrl} key={uuidv4()} />
-    //             ))}
-    //             {loading == false ? 
-    //             <div className="add-image"> 
-    //                     {Loader()}<h4>Uploading...</h4>
-    //             </div>: 
-    //             <div className="add-image">
-    //                 <label htmlFor="file">
-    //                     <input type="file" name="img" onChange={photoChange} id="file" />
-    //                     {upload()}<h4>Upload Images</h4>
-    //                 </label> 
-    //             </div>}
-    //     </>
-    //     // if(requestImages == [] ){
-    //     //     return(<>
-    //     //         {temporaryImage.map(({imageSource}) => 
-    //     //     <img src={imageSource} key={uuidv4()} />
-    //     //     ) }
-    //     //          <div className="add-image">
-    //     //     <label htmlFor="file">
-    //     //         <input type="file" name="img" onChange={photoChange} id="file" />
-    //     //         {upload()}<h4>Upload Images</h4>
-    //     //     </label> 
-    //     // </div></> )
-    //     // }else{
-    //     //    return (<> {requestImages.map(({cloudUrl}) => 
-    //     //    <img src={cloudUrl} key={uuidv4()} />
-    //     //    ) }
-    //     //        <div className="add-image">
-    //     //            <label htmlFor="file">
-    //     //                <input type="file" name="img" onChange={photoChange} id="file" />
-    //     //                {upload()}<h4>Upload Images</h4>
-    //     //            </label> 
-    //     //        </div>
-    //     //        </>)
-    //     // }
-        
-    // }
 
     
 

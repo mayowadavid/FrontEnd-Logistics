@@ -935,6 +935,16 @@ input[type=text]{
     padding: 1vh;
   }
 
+  .user-request {
+    max-width: 90vw;
+    margin: 0 auto;
+    border-style: solid;
+    padding: 10vw;
+    border-width: 0.5vh;
+    border-color: #f3f3f2;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 13%);
+  }
+
   /*  admin */
 
   .admin {
