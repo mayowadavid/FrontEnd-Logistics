@@ -134,7 +134,7 @@ const photoChange = (e) => {
         otherItems} = input;
 
        userId !== null && database.collection('Requests').add({ userId, cartons, deliveryLocations, descriptions, itemsWorth, receiverFirstName, receiverPhoneNumber1,
-          receiverPhoneNumber2, requestImages, senderFirstName, senderPhoneNumber1, senderPhoneNumber2, tagName, otherItems, createdAt: timestamp()})
+          receiverPhoneNumber2, requestImages, senderFirstName, senderPhoneNumber1, senderPhoneNumber2, tagName, otherItems, status: "pending", createdAt: timestamp()})
           .then((data) => {
               data && (setRequestSuccess(true),
               setInput(initialState));

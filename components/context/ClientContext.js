@@ -40,7 +40,9 @@ const ClientContextProvider = (props) => {
               .onSnapshot((querySnapshot) => {
                       querySnapshot.forEach((doc) => {
                           // doc.data() is never undefined for query doc snapshots
-                          data.push(doc.data())
+                          let docta = doc.data;
+                          let id = doc.id;
+                          data.push(docta, id)
                       });
                   });
             })

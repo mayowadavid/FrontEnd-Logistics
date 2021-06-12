@@ -24,7 +24,7 @@ const Transaction = () => {
                 } 
           };
            
-    return (isLogin == true ? (<div>
+    return (isLogin == true && transaction !== undefined? (<div>
             <DynamicHeader />
             <div className="transaction_table">
                     <div className="transaction_wrapper">
@@ -36,12 +36,12 @@ const Transaction = () => {
                         
                         <tbody>
                                 {
-                                   transaction !== [] && ( transaction.map(({tagName, createdAt, status, _id, amount})=>
+                                   transaction !== [] && ( transaction.map(({tagName, createdAt, status, id, amount})=>
                                    <tr key={uuidv4()} >   
                                                   <td>{tagName}</td>
                                                   <td>{getFormattedDate(createdAt)}</td>
                                                   <td>{status}</td>
-                                                  <td>{_id}</td>
+                                                  <td>{id}</td>
                                                   <td>{amount ? amount : "--"}</td> 
                                         </tr>
                                         ))
