@@ -709,7 +709,11 @@ input[type=text]{
   
 .login-tag {
   display: flex;
-  max-width: 70vw !important;
+  width: 100vw !important;
+}
+
+.tag {
+  width: 100vw !important;
 }
 
   .request-slider img {
