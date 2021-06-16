@@ -15,16 +15,10 @@ const UserLogin = () => {
                     <p>
                     <label htmlFor="email">Email</label>
                     <input type="text" onChange={handleLoginChange} id="email" name="email" placeholder="Your name.."/>
-                    {formErrors.email !== undefined || formErrors.email.length > 0  && (
-                      <span className="errorMessage">{formErrors.email !== undefined && formErrors.email}</span>
-                    )}
                     </p>
                       <p>
                           <label htmlFor="password">Password</label>
                           <input type="password" onChange={handleLoginChange} id="password" name="password" placeholder="Your last name.."/>
-                          {formErrors.password !== undefined || formErrors.password.length > 0  && (
-                          <span className="errorMessage">{formErrors.password !== undefined && formErrors.password}</span>
-                      )}
                       </p>
                     <div className="submit">
                       <input type="submit" value="login"/>

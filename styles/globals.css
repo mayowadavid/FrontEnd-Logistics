@@ -323,7 +323,7 @@ input[type=text]{
 
 .login-tag {
   display: flex;
-  max-width: 35vh;
+  max-width: 40vh;
   margin: 2vw auto;
   justify-content: center;
 }
