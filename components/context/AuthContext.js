@@ -137,6 +137,7 @@ const AuthContextProvider = (props) => {
   }
 
   const handleSocialLogin = (e) => {
+    e.preventDefault();
     auth.signInWithPopup(provider).then((result) => {
       /** @type {firebase.auth.OAuthCredential} */
       var credential = result.credential;
@@ -144,7 +145,14 @@ const AuthContextProvider = (props) => {
       var token = credential.accessToken;
       // The signed-in user info.
       var user = result.user;
-        user && (user.uid && setLogin(true));
+      let data = user.displayName.split(" ");
+      let firstName= data[0];
+      let lastName = data[1];
+      let email= result.user.email;
+      user && (user.uid && setLogin(true));
+       return database.collection('Profile').doc(result.user.uid).set({
+          firstName, lastName, email
+        })
       // ...
     }).catch((error) => {
       // Handle Errors here.
@@ -160,7 +168,6 @@ const AuthContextProvider = (props) => {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    console.log("mounted");
     setAuthenticating(true);
     const {email, password } = login;
     auth.signInWithEmailAndPassword(email, password).then(()=>{
