@@ -712,8 +712,16 @@ input[type=text]{
   width: 100vw !important;
 }
 
+.login-tag h5{
+  font-size: 10px !important;
+}
+
 .tag {
   width: 100vw !important;
+}
+
+.tag h5{
+  font-size: 10px !important;
 }
 
   .request-slider img {
