@@ -706,6 +706,12 @@ input[type=text]{
     padding: 4vw !important;
   }
 
+  
+.login-tag {
+  display: flex;
+  max-width: 60vw;
+}
+
   .request-slider img {
     width: auto;
     height: calc(20vh);

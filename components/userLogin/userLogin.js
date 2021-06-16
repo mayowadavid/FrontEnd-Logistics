@@ -6,7 +6,6 @@ import { Google } from '../../svg';
 const UserLogin = () => {
 
     const {login,  handleLoginChange, handleLoginSubmit, handleSocialLogin} = useContext(AuthContext);
-    const {formErrors} = login;
     
     return (<div className="form_container">
                 <div className="overall-form">
