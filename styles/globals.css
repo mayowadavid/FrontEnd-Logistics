@@ -18,7 +18,7 @@ html, body{
 .shipping-request {
   overflow: hidden;
   margin-left: 28vh;
-  height: 100vh;
+  height: 100%;
 }
 
 .status-change-wrapper {
@@ -246,7 +246,7 @@ input[type=text]{
     border-color: #e4dede;
     padding: 3vh;
     width: 45vh;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 13%);
+    box-shadow: 1px 1px 3px rgb(0 0 0 / 15%);
   }
   
   .signup-wrapper {
@@ -318,23 +318,36 @@ input[type=text]{
     display: flex;
     max-width: 35vh;
     margin: 2vw auto;
-    text-align: center;
+    justify-content: center;
   }
 
 .login-tag {
-  max-width: 25vw;
+  display: flex;
+  max-width: 35vh;
   margin: 2vw auto;
-  text-align: center;
+  justify-content: center;
+}
+
+.login-tag h5{
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.login-tag h5:last-child {
+  margin-left: 0.9vw;
+  color: blue;
 }
 
   .tag h5 {
+    font-size: 15px;
     margin: 0;
     padding: 0;
   }
 
-  .tag h5:last-child {
+  .tag h5:last-child a{
     margin-left: 0.9vw;
-    color: #213569;
+    color: blue;
   }
 
 /* Dashboard */
@@ -526,6 +539,22 @@ input[type=text]{
 
   .submit {
     text-align: center;
+  }
+
+  .submit-reset {
+    text-align: center;
+  }
+
+  .submit-reset input[type=submit]{
+      background-color: #213569;
+      color: white;
+      padding: 1vh 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 40%;
+      text-align: center;
   }
 
   /* Request */
@@ -979,8 +1008,11 @@ input[type=text]{
     text-decoration: none;
   }
 
+  .dynamic-bottom {
+    display: none;
+  }
+
   .side-holder  {
-    padding: 5vh;
     margin: 0.5vh;
     font-weight: bolder;
     border-color: #fff;

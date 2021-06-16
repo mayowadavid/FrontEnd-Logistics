@@ -41,9 +41,9 @@ const AddRequest = () => {
     const {formErrors } = {...input}
         
     return (
-          <>
-              <div className="photo">
-              {requestImages[0] !== undefined && (requestImages.map(({cloudUrl})=>(
+            <>
+            <div className="photo">
+            {requestImages[0] !== undefined && (requestImages.map(({cloudUrl})=>(
                 <img src={cloudUrl} key={uuidv4()} />)
                 ))}
                 {loading == false ? 
@@ -52,15 +52,15 @@ const AddRequest = () => {
                         <input type="file" name="img" onChange={photoChange} id="file"  accept="/.jpg, .png, gif" />
                         {upload()}<h4>Upload Images</h4>
                     </label> 
-                 </div>:
+                </div>:
                 <div className="add-image"> 
                         {Loader()}<h4>Uploading...</h4>
                 </div>
                 }
-              </div>
-              
-          <form onSubmit={  input._id ? (e)=> handleRequestUpdate(e, input._id) : (e)=>  handleFormPreview(e) }>
-              <div className="sender-container" >
+            </div>
+            
+        <form onSubmit={  input._id ? (e)=> handleRequestUpdate(e, input._id) : (e)=>  handleFormPreview(e) }>
+            <div className="sender-container" >
               <h3>Sender Information</h3>
                   <div className="sender">
                   <p>

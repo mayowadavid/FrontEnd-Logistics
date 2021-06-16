@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { loginValidate, singupValidate } from '../validator/validate';
 import {useRouter} from 'next/router';
-import { auth, database, provider } from '../firebase';
+import { auth, database, provider, functions } from '../firebase';
 
 
 
@@ -25,7 +25,13 @@ const AuthContextProvider = (props) => {
           password: '',
       }
     });
-    
+
+    const [resetPassword, setResetPassword] = useState({
+        email: '',
+        formErrors: {
+            email: ''
+        }
+      });
 
     const [login, setLogin] = useState({
         email: '',
@@ -57,7 +63,6 @@ const AuthContextProvider = (props) => {
         })
       }, [])
 
-         
     const handleLoginChange = (e) => {
         const {name, value} = e.target;
         const{formErrors} = login;
@@ -87,22 +92,59 @@ const AuthContextProvider = (props) => {
           router.replace('dashboard');
         } )
     }
+
+    const handleAdminSignUp = (e) => {
+      e.preventDefault();
+      const {firstName, lastName, email, phoneNumber, password} = signup;
+      const addAdminRole = functions.httpsCallable('addAdminRole');
+      addAdminRole(email).then(cred => {
+        console.log(cred);
+      })
+      // auth.createUserWithEmailAndPassword(email, password).then(cred =>{
+      //   return database.collection('Profile').doc(cred.user.uid).set({
+      //     phoneNumber, email, firstName, lastName
+      //   })}
+      // ).then(()=>{
+      //   setisLogin(true);
+      //   router.replace('dashboard');
+      // } )
+    }
     
     const handleSignout = (e) => {
       e.preventDefault();
-      auth.signOut();
+      auth.signOut().then(() => {
+        // Sign-out successful.
+      }).catch((error) => {
+        // An error happened.
+      });
+  }
+  const passwordReset = (e) => {
+    e.preventDefault();
+    const {email}= resetPassword;
+    auth.sendPasswordResetEmail(email).then(()=> {})
+    .catch((error) =>{
+      setError(error.message);
+    })
+  }
+
+  const handlePasswordChange = (e) => {
+    e.preventDefault();
+    const {name, value} = e.target;
+    const {formErrors} = resetPassword;
+    const emailRegex = RegExp( /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+    formErrors.email = emailRegex.test(value) && value.length > 0 ? '': '*input a valid email address*';
+    setResetPassword({...resetPassword, [name]: value});
   }
 
   const handleSocialLogin = (e) => {
     auth.signInWithPopup(provider).then((result) => {
       /** @type {firebase.auth.OAuthCredential} */
       var credential = result.credential;
-      console.log(result);
-  
       // This gives you a Google Access Token. You can use it to access the Google API.
       var token = credential.accessToken;
       // The signed-in user info.
       var user = result.user;
+        user && (user.uid && setLogin(true));
       // ...
     }).catch((error) => {
       // Handle Errors here.
@@ -116,22 +158,23 @@ const AuthContextProvider = (props) => {
     });
   }
 
-      const handleLoginSubmit = (e) => {
-        e.preventDefault();
-        setAuthenticating(true);
-        const {email, password } = login;
-        auth.signInWithEmailAndPassword(email, password).then(()=>{
-        setisLogin(true);
-        router.replace('dashboard');
-          })
-      }; 
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    console.log("mounted");
+    setAuthenticating(true);
+    const {email, password } = login;
+    auth.signInWithEmailAndPassword(email, password).then(()=>{
+    setisLogin(true);
+    router.replace('dashboard');
+      })
+  }; 
       
       
 
 
 
     return (
-        <AuthContext.Provider value={{sessionToken, setSessionToken, login, signup, isLogin, setisLogin, handleLoginChange, handleSocialLogin, handleSignupChange, handleSignout, handleSignupSubmit, handleLoginSubmit}}>
+        <AuthContext.Provider value={{sessionToken, setSessionToken, passwordReset, resetPassword, handlePasswordChange, login, signup, isLogin, setisLogin, handleLoginChange, handleSocialLogin, handleSignupChange, handleAdminSignUp, handleSignout, handleSignupSubmit, handleLoginSubmit}}>
             {props.children}
         </AuthContext.Provider>
     );

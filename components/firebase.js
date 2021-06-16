@@ -2,16 +2,18 @@ import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/functions';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyACIDeiqQIHextjTi28NVDmh5hWHahuiNE",
-    authDomain: "mayor-db13a.firebaseapp.com",
-    databaseURL: "https://mayor-db13a.firebaseio.com",
-    projectId: "mayor-db13a",
-    storageBucket: "mayor-db13a.appspot.com",
-    messagingSenderId: "22905502977",
-    appId: "1:22905502977:web:248fd426a1ce4497336f00"
-  };
+  apiKey: "AIzaSyC_IMKXaNJIwEdAJTQNH2ltCPcON9I6Olg",
+  authDomain: "managerbran-2a699.firebaseapp.com",
+  databaseURL: "https://managerbran-2a699-default-rtdb.firebaseio.com",
+  projectId: "managerbran-2a699",
+  storageBucket: "managerbran-2a699.appspot.com",
+  messagingSenderId: "474981172645",
+  appId: "1:474981172645:web:fa8da9f09f0c344563144c",
+  measurementId: "G-054GEKBK2H"
+};
 
   const firebaseApp = !firebase.apps.length ? firebase.initializeApp(firebaseConfig) :firebase.app();
   const database = firebase.firestore();
@@ -35,7 +37,7 @@ const firebaseConfig = {
   const auth = firebase.auth();
   const timestamp = firebase.firestore.FieldValue.serverTimestamp;
   const provider = new firebase.auth.GoogleAuthProvider();
+  const functions = firebase.functions();
 
- 
-  export {store, database, auth, timestamp, provider};  
+  export {store, database, auth, timestamp, provider, functions};  
  

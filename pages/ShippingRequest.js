@@ -4,6 +4,7 @@ import { v4 as uuidv4} from 'uuid';
 import Link from 'next/link';
 import SideButton from "../components/AdminRequest/sideButton";
 import { RequestContext } from "../components/context/RequestContext";
+import { AuthContext } from "../components/context/AuthContext";
 import AdminSignin from "../components/adminLogin/adminSignin";
 import BottomButton from "../components/AdminRequest/BottomButton";
 import { database } from "../components/firebase";
@@ -11,65 +12,80 @@ import DynamicBottom from "../components/AdminRequest/DynamicBottom";
 
 
 const ShippingRequest = () => {
-  
+        const{extractedRequest, setExtractedRequest, setCount, initialState, setInput, setPermanentImages} = useContext(RequestContext);
+        const{isLogin} = useContext(AuthContext);
         const [requestOption, setRequesttOption] = useState([
                 {options: "move-to-trash"},
                 {options: " Change status to processing"},
                 {options: "Change status to on-hold"},
-                {options: "Change status to completed"}
-            ]);
-        
-            const{extractedRequest, setExtractedRequest, setCount, input, initialState, setInput, setPermanentImages, isLogin} = useContext(RequestContext);
-
-            const [q, setQ] = useState(""); 
-
-            const [updateShipping, setUpdateShipping] = useState();
-            
-
-            useEffect (async () => {
-                    database.collection('Requests')
-                    .onSnapshot(snap => {
-                        let documents = [];
-                        snap.forEach(doc => {
-                          documents.push({...doc.data(), id: doc.id});
-                        });
-                        setExtractedRequest(documents)
-                    })
+                {options: "Change status to completed"}]);
+        const [updateShipping, setUpdateShipping] = useState();
+        const [allCheck, setAllCheck]= useState(false);
+        useEffect ( () => {
+                database.collection('Requests')
+                .onSnapshot(snap => {
+                let documents = [];
+                snap.forEach(doc => {
+                documents.push({...doc.data(), id: doc.id, select: false});
+                });
+                setExtractedRequest(documents)
+                })
         }, []);
 
-         const getFormattedDate = (dateString) => {
-                if (!dateString) {
-                  return "";
-                }
-          
-                const date = new Date(dateString);
-          
-                return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-          };
+        const [q, setQ] = useState(""); 
+
+        const getFormattedDate = (dateString) => {
+                if (dateString !== undefined ) {
+                        const date = dateString !== undefined && new Date(dateString.toDate());
+                        return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+                } };
 
         const search =(rows) => {
                 const columns = rows[0] && Object.keys(rows[0])
                 return rows.filter((row) => 
                 columns.some((column) => row[column].toString().toLowerCase().indexOf(q.toLowerCase()) > -1)
-                );
-            }
+                );}
+        const handleAll = (e)=> {
+                let {checked} = e.target;
+                setAllCheck(checked);
+                let data = extractedRequest.map((d) => { 
+                        d.select= checked;
+                return d
+                        }
+                )
+                setExtractedRequest(data);
+        }
 
-            const newShipping = ()=>{
-                    setCount();
-                    setInput(initialState);
-                    return setUpdateShipping(<RequestHandler />)
-            }
+        const handleSingle = (e, id) => {
+        const{checked} = e.target
+        let dataIndex =   extractedRequest.findIndex((x)=> x.id == id);
+        let updatedData =  extractedRequest.map((datas, i )=> {
+                i == dataIndex && (d.select = checked)
+                return datas
+                        });
+                setExtractedRequest(updatedData);
+        let dynamicEvent = extractedRequest !== undefined && extractedRequest.find((d)=>{
+                        return d.select == false
+                })
+                dynamicEvent !== undefined ? setAllCheck(false) : setAllCheck(true);
+        }
 
-            const requestData = (id) => {
+        const newShipping = ()=>{
+                setCount();
+                setInput(initialState);
+                return setUpdateShipping(<RequestHandler />)
+        }
+
+        const requestData = (id) => {
                 
-            }
-           
-    return (isLogin == true ? (<>
-         <SideButton/>
-         <BottomButton />
-            <div className="shipping-request">
-                   {    updateShipping !== undefined ? updateShipping :
-                           <>
+        }
+        
+        return (isLogin == true ? (<>
+        <SideButton/>
+        <BottomButton />
+        <div className="shipping-request">
+                {    updateShipping !== undefined ? updateShipping :
+                        <>
                                 <div className="create-contact">
                                                 <div className="add-button">
                                                         <div onClick={()=> setPermanentImages([])}><Link href="/AdminRequest"><a><p >Create New</p></a></Link></div>
@@ -101,26 +117,25 @@ const ShippingRequest = () => {
                                 </div>
                                 <table className="contact-body">
                                         <thead> 
-                                                <tr><td><input type="checkbox" /></td><td><strong>Name</strong></td><td>Date</td><td>Status</td><td>Total</td></tr>
+                                                <tr><td><input type="checkbox" onChange={handleAll} checked={allCheck}/></td><td><strong>Name</strong></td><td>Date</td><td>Status</td><td>Total</td></tr>
                                         </thead>
                                         
                                         <tbody>
                                                 {
-                                                extractedRequest !== undefined && ( extractedRequest.map(({tagName, updatedAt, status, id, amount})=>
+                                                extractedRequest !== undefined && ( search(extractedRequest).map(({tagName, createdAt, status, id, amount, select})=>
                                                 <tr key={uuidv4()} >   
-                                                                <td><input type="checkbox" /></td>
-                                                                {/* <td onClick={()=> requestData(_id)}><Link  href={`/SingleRequest/?id=${_id}`}><a>{tagName}</a></Link></td> */}
-                                                                <td><Link  href={`/EachRequest/${id}`}><a>{tagName}</a></Link></td>
-                                                                <td>{getFormattedDate(updatedAt)}</td>
+                                                                <td><input type="checkbox" onChange={(e)=>handleSingle(e, id)} checked={select}/></td>
+                                                                <td><Link  href={`/EachRequest/${id}`}><a>{tagName !== undefined ? tagName : "--"}</a></Link></td>
+                                                                <td>{getFormattedDate(createdAt)}</td>
                                                                 <td>{status}</td>
-                                                                <td>{amount ? amount : "--"}</td> 
+                                                                <td>{amount !== undefined ?  amount : "--"}</td> 
                                                         </tr>
                                                         ))
                                                 }
                                         </tbody>
                                         <tfoot> 
                                         <tr> 
-                                                <td><input type="checkbox" /></td>
+                                                <td><input type="checkbox" onChange={handleAll} checked={allCheck}/></td>
                                                 <td><strong>Name</strong></td>
                                                 <td>Date</td>
                                                 <td><strong>Completed</strong></td>
@@ -128,11 +143,10 @@ const ShippingRequest = () => {
                                         </tr>
                                         </tfoot>
                                 </table>
-                    </>
-                    }
+                </>
+                }
                 </div>
                 <DynamicBottom />
-        </>) : (<AdminSignin />)
-    )
+        </>) : (<AdminSignin />))
 }  
 export default ShippingRequest;

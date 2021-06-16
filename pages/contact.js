@@ -5,9 +5,11 @@ import { AuthContext } from "../components/context/AuthContext";
 import SideButton from "../components/AdminRequest/sideButton";
 import AdminSignin from "../components/adminLogin/adminSignin";
 import BottomButton from "../components/AdminRequest/BottomButton";
+import { auth, database } from "../components/firebase";
 
 const Contact = () => {
-       
+    const[contacts, setContacts] = useState([]); 
+    const{isLogin} = useContext(AuthContext);
 
         const initialState =
         {
@@ -30,10 +32,18 @@ const Contact = () => {
         {options: "Change status to completed"}
     ])
 
-    const{contacts, setContacts} = useContext(RequestContext); 
-    const{isLogin, setisLogin} = useContext(AuthContext);
-
     
+    useEffect(()=>{
+        auth.onAuthStateChanged(user=>{
+          user !== null && database.collection('Profile').onSnapshot(snapshot=>(
+            setContacts(snapshot.docs.map(doc=>({
+               data: doc.data(),
+               id: doc.id
+            }))))
+          );
+        })
+   }, [])
+    console.log(contacts);
 
     // change contact
         const handleChange = (e) => {
@@ -159,7 +169,8 @@ const Contact = () => {
                              <tr><th><input type="checkbox" onChange={ changeSelector} /></th><th>Name</th><th>Email</th><th>Phone Number</th><th>Address</th></tr>
                         </thead>
                         <tbody>{  
-                                             search(contacts).map(({ firstName, email, phoneNumber, address}, i) =>{  
+                                             search(contacts).map(({data}, i) =>{
+                                                 let {firstName, email, phoneNumber, address} =data
                                         return (<tr key={uuidv4()} ><td><input type="checkbox"   onChange={(e)=> { (contacts[i] = e.target.checked) || setSelectAll(false)}}  /></td><td><div>{firstName ? firstName: '--'}</div></td><td><strong>{email ? email: '--'}</strong></td><td><strong>{phoneNumber? phoneNumber: '--'}</strong></td><td><strong>{address ? address: '--'}</strong></td></tr>)
                                     }
                                   ) }

@@ -22,7 +22,7 @@ const AdminSignin = () => {
             </p>
             
               <p>
-                   <label htmlFor="password">Password</label>
+                  <label htmlFor="password">Password</label>
                   <input type="password" onChange={handleLoginChange} id="password" name="password" placeholder="Your last name.."/>
                   {formErrors.password.length > 0  && (
                   <span className="errorMessage">{formErrors.password}</span>

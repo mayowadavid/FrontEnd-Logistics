@@ -8,9 +8,7 @@ import SimpleSlider from '../slider';
 const RequestPreview = () => {
 
     const {input, setCount, handleFormSubmit} = useContext(RequestContext);
-   
 
-  
     return (
             <>
                 <SimpleSlider /> 
@@ -44,7 +42,7 @@ const RequestPreview = () => {
                         <p>{input.amount}</p>
                     </div>  
                 </div>
-                   { input._id ? (<div className="submit">
+                { input._id ? (<div className="submit">
                         <input className="submit"  type="submit" value="Edit"/>
                     </div>): (<div className="submit">
                         <input className="submit"  type="submit" value="Submit"/>

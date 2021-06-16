@@ -40,14 +40,13 @@ const RequestContextProvider = (props) =>{
             amount: ''
             }
         };
-       
 
     const[input, setInput] = useState(initialState);
     const [contacts, setContacts] = useState([]);
     const [extractedRequest, setExtractedRequest] = useState();
     const [sessionToken, setSessionToken] = useState();
     const [isLogin, setisLogin] = useState(false);
-    const[temporaryImage, setTemporaryImage] = useState([]);
+    const [temporaryImage, setTemporaryImage] = useState([]);
     const [requestImages, setRequestImages] = useState([]);
     const [count, setCount] = useState();
     const [form, setForm] = useState();
@@ -57,19 +56,43 @@ const RequestContextProvider = (props) =>{
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [userId, setUserId] = useState('');
+    const [transaction, setTransaction] = useState([]);
+    const [transactionInst, setTransactionInst] = useState();
     
+
+    
+    useEffect (() => {
+          const data = [];
+          auth.onAuthStateChanged(user=>{
+                  user !== null && database.collection('Requests')
+                  .where("userId", "==", user.uid)
+                  .get().then((querySnapshot) => {
+                          querySnapshot.forEach((doc) => {
+                              // doc.data() is never undefined for query doc snapshots
+                              let {tagName, createdAt, status, amount} = doc.data();
+                              let id = doc.id;
+                              data.push({tagName, createdAt, status, amount, id})
+                          });
+                      });
+                })
+                setTransaction(data);
+    }, []);
+
+    useEffect(() =>{
+      transactionInst !== undefined && (setTransaction([...transaction, transactionInst]));
+    }, [transactionInst])
 
     const handleChange = (e) => {
         if(e){
-           e.preventDefault();
-           const {name, value, id} = e.target;
-           const {formErrors} = {...input};
-           requestValidate(id, value, formErrors);
-           const newInput = { ...input, [name]: value };
-           return setInput(newInput);
+          e.preventDefault();
+          const {name, value, id} = e.target;
+          const {formErrors} = {...input};
+          requestValidate(id, value, formErrors);
+          const newInput = { ...input, [name]: value };
+          return setInput(newInput);
         }
     }; 
-   const handleCheck = (e)=>{
+    const handleCheck = (e)=>{
     const {name, checked} = e.target;
     const newInput = {...input, [name]: checked};
     return setInput(newInput);
@@ -79,24 +102,27 @@ const RequestContextProvider = (props) =>{
     setProgress(0);
    }, [progress])
 
+   useEffect(()=>{
+    router.prefetch('/transaction')
+  }, [])
+
    useEffect (()=> {
     auth.onAuthStateChanged(user=>{
-      user !== null 
-        setUserId(user.uid)
+      user !== null && setUserId(user.uid)
     })
    }, [])
 
 const photoChange = (e) => {
     e.preventDefault(); 
     
-   if(e.target.files){
+  if(e.target.files){
     progress !== 100 && setLoading(true) 
-     let selected = e.target.files[0];
+    let selected = e.target.files[0];
     let types = ['image/jpeg', 'image/png'];
-   let fileType = selected !== undefined ? types.includes(selected.type): setError("unsupported image type* accepted image jpg/png");
-      let FileSize = "5000000";
-     let filteredImageSize= fileType == true ? selected.size < FileSize : setError("file too large *5mb minimum"); 
-     let perfectSize = filteredImageSize == true && (URL.createObjectURL(selected)); 
+    let fileType = selected !== undefined ? types.includes(selected.type): setError("unsupported image type* accepted image jpg/png");
+    let FileSize = "5000000";
+    let filteredImageSize= fileType == true ? selected.size < FileSize : setError("file too large *5mb minimum"); 
+    let perfectSize = filteredImageSize == true && (URL.createObjectURL(selected)); 
     let restructureUrl = {imageSource: perfectSize}
     perfectSize !== undefined && setTemporaryImage([...temporaryImage, restructureUrl]);
       if(filteredImageSize == true ){
@@ -132,12 +158,13 @@ const photoChange = (e) => {
         senderPhoneNumber2,
         tagName,
         otherItems} = input;
-
-       userId !== null && database.collection('Requests').add({ userId, cartons, deliveryLocations, descriptions, itemsWorth, receiverFirstName, receiverPhoneNumber1,
+        setTransactionInst({tagName, status: "pending", amount: "", id: "hkaj$5%^gxn*8nk" });
+        userId !== null && database.collection('Requests').add({ userId, cartons, deliveryLocations, descriptions, itemsWorth, receiverFirstName, receiverPhoneNumber1,
           receiverPhoneNumber2, requestImages, senderFirstName, senderPhoneNumber1, senderPhoneNumber2, tagName, otherItems, status: "pending", createdAt: timestamp()})
           .then((data) => {
               data && (setRequestSuccess(true),
-              setInput(initialState));
+              setInput(initialState)
+              );
           })
           .catch(
             (error) => {
@@ -148,14 +175,14 @@ const photoChange = (e) => {
 
 
     const handleRequestUpdate = async(e, id) => {
-        e.preventDefault();
-       setInput(...input, requestImages)
+      e.preventDefault();
+      setInput(...input, requestImages)
     }
 
     const handleFormPreview = (e) => {
-        e.preventDefault();
-       setInput({...input, requestImages});
-        setCount("active");
+      e.preventDefault();
+      setInput({...input, requestImages});
+      setCount("active");
     }
 
 
@@ -170,7 +197,7 @@ const photoChange = (e) => {
 
 
     return (
-        <RequestContext.Provider value={{input, error, loading, setRequestImages, requestImages, requestSuccess, setRequestSuccess, initialState, setCount, count, setInput, handleChange, handleCheck, temporaryImage, handleFormSubmit, handleFormPreview, photoChange, selector, setExtractedRequest, extractedRequest, contacts, setContacts, handleRequestUpdate, sessionToken, isLogin, setisLogin}}>
+        <RequestContext.Provider value={{ transaction, setTransaction, transactionInst, input, error, loading, setRequestImages, requestImages, requestSuccess, setRequestSuccess, initialState, setCount, count, setInput, handleChange, handleCheck, temporaryImage, handleFormSubmit, handleFormPreview, photoChange, selector, setExtractedRequest, extractedRequest, contacts, setContacts, handleRequestUpdate, sessionToken, isLogin, setisLogin}}>
             {props.children}
         </RequestContext.Provider>
     )

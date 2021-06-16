@@ -26,39 +26,22 @@ const ClientContextProvider = (props) => {
     const [profile, setProfile] = useState(initialState);
     const [data, setData] = useState();
     const [profileImage, setProfileImage] = useState();
-    const[temporaryImage, setTemporaryImage]= useState();
+    const [temporaryImage, setTemporaryImage]= useState();
     const [count, setCount] = useState();
-    const [transaction, setTransaction] = useState([]);
     const [error, setError] = useState(null);
     const [progress, setProgress] = useState(0);
     useEffect(()=>{
       auth.onAuthStateChanged(user=>{
-        user !== null && database.collection('Profile').doc(user.uid).get().then(doc=>
-          setData(doc.data())
-        );
+        user !== null && database.collection('Profile').doc(user.uid).get().then(doc=>{
+          let {firstName, lastName, email, phoneNumber, address, profileImage} = doc.data();
+          let id= doc.id;
+          setData({firstName, lastName, email, phoneNumber, address, profileImage, id})
+        })
       })
     }, [])
 
-    useEffect (() => {
-      const data = [];
-      auth.onAuthStateChanged(user=>{
-              user !== null && database.collection('Requests')
-              .where("userId", "==", user.uid)
-              .get().then((querySnapshot) => {
-                      querySnapshot.forEach((doc) => {
-                          // doc.data() is never undefined for query doc snapshots
-                          let documents = doc.data();
-                          let id = doc.id;
-                          data.push({documents, id})
-                      });
-                  });
-            })
-            setTransaction(data);
-}, []);
 
-useEffect(()=>{
-  router.prefetch('/transaction')
-}, [])
+
     
 
     useEffect(()=>{
@@ -67,10 +50,11 @@ useEffect(()=>{
     }, [data])
 
 
+
     const handleProfileChange = (e) => {
         e.preventDefault();  
-       if(e.target.files){
-         let selected = e.target.files[0];
+        if(e.target.files){
+        let selected = e.target.files[0];
         let types = ['image/jpeg', 'image/png'];
        let fileType = selected !== undefined ? types.includes(selected.type): setError("unsupported image type* accepted image jpg/png");
           let FileSize = "5000000";
@@ -106,18 +90,27 @@ useEffect(()=>{
 
   const handleProfileSubmit = async(e) => {
     e.preventDefault();
-    const {firstName,
-    lastName,
-    email,
-    phoneNumber, 
-    address,
-    profileImage}= profile;
+    const {firstName, lastName, email, phoneNumber, address, profileImage}= profile;
     database.collection('Profile').add({firstName,
       lastName,
       email,
       phoneNumber, 
       address,
       profileImage})
+  }; 
+
+  const handleProfileUpdate = async(e) => {
+    e.preventDefault();
+    const {firstName, lastName, email, phoneNumber, address, id, profileImage}= profile;
+    auth.onAuthStateChanged(user=>{
+      user !== null && database.collection('Profile').doc(id).update({firstName,
+        lastName,
+        email,
+        phoneNumber, 
+        address,
+        profileImage});
+    })
+    
   }; 
   
 
@@ -134,7 +127,7 @@ useEffect(()=>{
   
 
     return (
-        <ClientContext.Provider value={{ transaction, setTransaction, handleProfileChange, handleProfilePreview, handleProfileSubmit, profile, setProfile, setTemporaryImage, temporaryImage, profileDetails, profileImage, setProfileImage, count, setCount}}>
+        <ClientContext.Provider value={{handleProfileChange, handleProfilePreview, handleProfileSubmit, handleProfileUpdate, profile, setProfile, setTemporaryImage, temporaryImage, profileDetails, profileImage, setProfileImage, count, setCount}}>
             {props.children}
         </ClientContext.Provider>
     )

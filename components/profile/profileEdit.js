@@ -14,7 +14,7 @@ const ProfileEdit = () => {
             <div  className="user-profile">
             <div className="profile-avatar">
               {
-                temporaryImage !==  undefined ? <img src={profileImage !== undefined ? profileImage : temporaryImage} /> : (<div> 
+                profile.profileImage !==  undefined ? <img src={profile.profileImage !== undefined ? profile.profileImage: temporaryImage} /> : (<div> 
                 <input type="file" name="profilePicture" onChange={ handleProfileChange } id="file" accept="/.jpg, .png, gif" />
                 <label htmlFor="file">
                   {avatar()}<h4>Upload avatar</h4>

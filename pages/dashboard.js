@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {box, profile, transaction } from "../svg";
 import { AuthContext } from '../components/context/AuthContext';
 import React, {useContext, useEffect} from 'react';

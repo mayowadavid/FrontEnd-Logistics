@@ -8,7 +8,7 @@ const SideButton = () => {
     return (
         <div className="side-button">
                 {selector.map(({content, icon, title, id}) => 
-                   <Link key={id} href={`/${content}`}><a> <div className="side-holder">{icon} {title}</div> </a></Link>
+                   <Link key={id} href={`/${content}`}><a> <div className="side-holder"><h3>{icon}</h3><h3>{title}</h3></div> </a></Link>
                 ) }
         </div>
        
