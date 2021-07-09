@@ -5,7 +5,7 @@ import { Google, innerLoader } from '../../svg';
 
 const UserLogin = () => {
 
-    const { authenticating, handleLoginChange, handleLoginSubmit, handleSocialLogin} = useContext(AuthContext);
+    const {userError, authenticating, handleLoginChange, handleLoginSubmit, handleSocialLogin} = useContext(AuthContext);
     
     return (<div className="form_container">
                 <div className="overall-form">
@@ -20,12 +20,13 @@ const UserLogin = () => {
                           <input type="password" onChange={handleLoginChange} id="password" name="password" placeholder="Your last name.."/>
                       </p>
                     <div className="submit">
-                        {authenticating !== true ? <input type="submit" value="login"/>: <button ><span>connecting...</span><span>{innerLoader()}</span></button>}
+                        {userError !== undefined || authenticating !== true ? <input type="submit" value="login"/>: <button ><span>connecting...</span><span>{innerLoader()}</span></button>}
                     </div>
+                    {userError !== undefined && <span className="errorMessage">{userError}</span>}
                 </form>
-                    <div className="social-login" onClick={handleSocialLogin}>
+                    <div className="social-login">
                           <span>or sign in with</span>
-                          <button><span>{Google()}</span><span>Google</span></button>
+                          <button onClick={handleSocialLogin}><span>{Google()}</span><span>Google</span></button>
                     </div>
               </div>
               <div className="login-tag">

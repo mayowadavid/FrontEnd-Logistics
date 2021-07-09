@@ -12,6 +12,7 @@ const AuthContextProvider = (props) => {
     const [isLogin, setisLogin] = useState(false);
     const [isAdmin, setisAdmin] = useState(false);
     const [sessionToken, setSessionToken] = useState();
+    const [userError, setUserError] = useState();
     const [signup, setSignup] = useState({
         firstName: '',
         lastName: '',
@@ -122,6 +123,8 @@ const AuthContextProvider = (props) => {
     const passwordReset = (e) => {
         e.preventDefault();
         const { email } = resetPassword;
+        
+        console.log(email);
         auth.sendPasswordResetEmail(email).then(() => {})
             .catch((error) => {
                 setError(error.message);
@@ -138,7 +141,8 @@ const AuthContextProvider = (props) => {
     }
 
     const handleSocialLogin = (e) => {
-        e.preventDefault();
+        provider.addScope('profile');
+        provider.addScope('email'); 
         auth.signInWithPopup(provider).then((result) => {
             /** @type {firebase.auth.OAuthCredential} */
             var credential = result.credential;
@@ -179,7 +183,17 @@ const AuthContextProvider = (props) => {
             user && (user.uid && setLogin(true));
             user && (user.uid && router.replace('dashboard'));
             user && (user.uid && setAuthenticating(false));
-        })
+        }).catch((error) => {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            setUserError(errorMessage);
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+        });
     };
 
     const handleAdminLogin = (e) => {
@@ -194,7 +208,7 @@ const AuthContextProvider = (props) => {
 
 
     return ( 
-        < AuthContext.Provider value = {{authenticating, sessionToken, setSessionToken, passwordReset, resetPassword, handlePasswordChange, login, signup, isLogin, isAdmin, setisLogin, handleLoginChange, handleSocialLogin, handleSignupChange, handleAdminSignUp, handleSignout, handleSignupSubmit, handleLoginSubmit }} >
+        < AuthContext.Provider value = {{userError, authenticating, sessionToken, setSessionToken, passwordReset, resetPassword, handlePasswordChange, login, signup, isLogin, isAdmin, setisLogin, handleLoginChange, handleSocialLogin, handleSignupChange, handleAdminSignUp, handleSignout, handleSignupSubmit, handleLoginSubmit }} >
              { props.children } 
         </AuthContext.Provider>
     )
