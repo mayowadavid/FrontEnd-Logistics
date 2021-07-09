@@ -13,7 +13,7 @@ import DynamicBottom from "../components/AdminRequest/DynamicBottom";
 
 const ShippingRequest = () => {
         const{extractedRequest, setExtractedRequest, setCount, initialState, setInput, setPermanentImages} = useContext(RequestContext);
-        const{isLogin} = useContext(AuthContext);
+        const{isAdmin} = useContext(AuthContext);
         const [requestOption, setRequesttOption] = useState([
                 {options: "move-to-trash"},
                 {options: " Change status to processing"},
@@ -59,9 +59,9 @@ const ShippingRequest = () => {
         const handleSingle = (e, id) => {
         const{checked} = e.target
         let dataIndex =   extractedRequest.findIndex((x)=> x.id == id);
-        let updatedData =  extractedRequest.map((datas, i )=> {
-                i == dataIndex && (d.select = checked)
-                return datas
+        let updatedData =  extractedRequest.map((allData, i )=> {
+                i == dataIndex && (allData.select = checked)
+                return allData
                         });
                 setExtractedRequest(updatedData);
         let dynamicEvent = extractedRequest !== undefined && extractedRequest.find((d)=>{
@@ -80,9 +80,8 @@ const ShippingRequest = () => {
                 
         }
         
-        return (isLogin == true ? (<>
+        return (isAdmin == true ? (<>
         <SideButton/>
-        <BottomButton />
         <div className="shipping-request">
                 {    updateShipping !== undefined ? updateShipping :
                         <>
@@ -143,10 +142,11 @@ const ShippingRequest = () => {
                                         </tr>
                                         </tfoot>
                                 </table>
+                                <DynamicBottom />
+                                 <BottomButton />
                 </>
                 }
                 </div>
-                <DynamicBottom />
         </>) : (<AdminSignin />))
 }  
 export default ShippingRequest;

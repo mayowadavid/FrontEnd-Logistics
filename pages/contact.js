@@ -5,11 +5,12 @@ import { AuthContext } from "../components/context/AuthContext";
 import SideButton from "../components/AdminRequest/sideButton";
 import AdminSignin from "../components/adminLogin/adminSignin";
 import BottomButton from "../components/AdminRequest/BottomButton";
+import DynamicBottom from "../components/AdminRequest/DynamicBottom";
 import { auth, database } from "../components/firebase";
 
 const Contact = () => {
     const[contacts, setContacts] = useState([]); 
-    const{isLogin} = useContext(AuthContext);
+    const{isAdmin} = useContext(AuthContext);
 
         const initialState =
         {
@@ -24,7 +25,7 @@ const Contact = () => {
     const [contactForm, setContactForm] = useState();
     const [selectAll, setSelectAll] = useState(false);
     const [q, setQ] = useState(""); 
-    const [bulk, setBulk] = useState("");
+    const [allCheck, setAllCheck]= useState(false);
     const [contactOption, setContactOption] = useState([
         {options: "Move-to-trash"},
         {options: " Change status to processing"},
@@ -32,20 +33,47 @@ const Contact = () => {
         {options: "Change status to completed"}
     ])
 
-    
+    console.log(contacts);
     useEffect(()=>{
         auth.onAuthStateChanged(user=>{
-          user !== null && database.collection('Profile').onSnapshot(snapshot=>(
-            setContacts(snapshot.docs.map(doc=>({
-               data: doc.data(),
-               id: doc.id
-            }))))
-          );
+          user !== null && database.collection('Profile').onSnapshot(snapshot=>{
+              let contactData = [];
+              snapshot.forEach(doc=>{
+                contactData.push({...doc.data(), id: doc.id, select: false})
+              })
+              setContacts(contactData);
+            })
         })
    }, [])
-    console.log(contacts);
 
-    // change contact
+        // check all data
+        const handleAll = (e)=> {
+            let {checked} = e.target;
+            setAllCheck(checked);
+            let data = contacts.map((d) => { 
+                    d.select= checked;
+            return d
+                    }
+            )
+            setContacts(data);
+        }
+
+        //check single data
+        const handleSingle = (e, id) => {
+        const{checked} = e.target
+        let dataIndex =   contacts.findIndex((x)=> x.id == id);
+        let updatedData =  contacts.map((allData, i )=> {
+            i == dataIndex && (allData.select = checked)
+            return allData
+                    });
+            setContacts(updatedData);
+        let dynamicEvent = contacts !== undefined && contacts.find((d)=>{
+                    return d.select == false
+                    })
+            dynamicEvent !== undefined ? setAllCheck(false) : setAllCheck(true);
+        }
+
+        // change contact
         const handleChange = (e) => {
                 if(e){
                     const select = false;
@@ -78,15 +106,7 @@ const Contact = () => {
             const activateForm = () => {
                return  setContactForm('active')
             }
-            //change selector
-            const changeSelector = (e) => {
-                
-                   setSelectAll( e.target.checked)
-                   contacts.map(({select})=>
-                   select = e.target.checked
-                   )
-                return contacts;
-            }
+           
             
         // CREATE contacts
         const createContact = () =>{
@@ -124,9 +144,8 @@ const Contact = () => {
         }
 
     
-    return ( isLogin == true ? (<>
+    return ( isAdmin == true ? (<>
         <SideButton />
-        <BottomButton />
          {contactForm == 'active' ? createContact() : <> </> 
          } 
             <div className="shipping-request"> 
@@ -164,21 +183,25 @@ const Contact = () => {
                                     </div>
                             </div>
                     </div>
-                    <table className="contact-body">
-                        <thead> 
-                             <tr><th><input type="checkbox" onChange={ changeSelector} /></th><th>Name</th><th>Email</th><th>Phone Number</th><th>Address</th></tr>
-                        </thead>
-                        <tbody>{  
-                                             search(contacts).map(({data}, i) =>{
-                                                 let {firstName, email, phoneNumber, address} =data
-                                        return (<tr key={uuidv4()} ><td><input type="checkbox"   onChange={(e)=> { (contacts[i] = e.target.checked) || setSelectAll(false)}}  /></td><td><div>{firstName ? firstName: '--'}</div></td><td><strong>{email ? email: '--'}</strong></td><td><strong>{phoneNumber? phoneNumber: '--'}</strong></td><td><strong>{address ? address: '--'}</strong></td></tr>)
-                                    }
-                                  ) }
-                        </tbody>
-                        <thead> 
-                                <tr><th><input type="checkbox" onChange={ changeSelector} /></th><th><strong>Name</strong></th><th><strong>Email</strong></th><th>Phone Number</th><th>Address</th></tr>
-                        </thead>
-                    </table>
+                    <div className="table-wrap">
+                        <table className="contact-body">
+                            <thead> 
+                                <tr><th><input type="checkbox" onChange={handleAll} checked={allCheck} /></th><th>Name</th><th>Email</th><th>Phone Number</th><th>Address</th></tr>
+                            </thead>
+                            <tbody>{  
+                                            contacts !== '' && (search(contacts).map(({firstName, email, phoneNumber, address, select, id}) =>{
+                                                   
+                                            return (<tr key={uuidv4()} ><td><input type="checkbox"   onChange={(e)=>handleSingle(e, id)} checked={select}  /></td><td><div>{firstName ? firstName: '--'}</div></td><td><strong>{email ? email: '--'}</strong></td><td><strong>{phoneNumber? phoneNumber: '--'}</strong></td><td><strong>{address ? address: '--'}</strong></td></tr>)
+                                        }
+                                    )) }
+                            </tbody>
+                            <thead> 
+                                    <tr><th><input type="checkbox" onChange={handleAll} checked={allCheck} /></th><th><strong>Name</strong></th><th><strong>Email</strong></th><th>Phone Number</th><th>Address</th></tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <DynamicBottom/>
+                 <BottomButton />
                 </div>
         </>): <AdminSignin />
     )

@@ -7,7 +7,7 @@ const HeaderBar = () => {
     return (
             <div className="header-bar">
                  <div className="logo"><Link href="/dashboard"><a>G4 logistics</a></Link></div>
-                 {isLogin? <div><Link href="/login"><a> login</a></Link></div> :  <div><a> Sign Out</a></div>}
+                 {isLogin? <div className="login"><a> Sign Out</a></div> : <div className="login"><Link href="/login"><a> login</a></Link></div>}
             </div>
         
     )

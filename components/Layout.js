@@ -9,15 +9,15 @@ const Layout = (props) => {
 return (
         <>
         { (firebase.apps.length === 1) && 
-        <AuthContextProvider>
         <RequestContextProvider>
+        <AuthContextProvider>
         <ClientContextProvider>
                 <Header />
                 <HeaderBar />
                 {props.children}
         </ClientContextProvider>
-        </RequestContextProvider>
         </AuthContextProvider>
+        </RequestContextProvider>
         }
         </>
         )

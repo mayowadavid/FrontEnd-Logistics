@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Google } from '../../svg';
+import { Google, innerLoader } from '../../svg';
 
 const UserLogin = () => {
 
-    const {login,  handleLoginChange, handleLoginSubmit, handleSocialLogin} = useContext(AuthContext);
+    const { authenticating, handleLoginChange, handleLoginSubmit, handleSocialLogin} = useContext(AuthContext);
     
     return (<div className="form_container">
                 <div className="overall-form">
@@ -20,7 +20,7 @@ const UserLogin = () => {
                           <input type="password" onChange={handleLoginChange} id="password" name="password" placeholder="Your last name.."/>
                       </p>
                     <div className="submit">
-                      <input type="submit" value="login"/>
+                        {authenticating !== true ? <input type="submit" value="login"/>: <button ><span>connecting...</span><span>{innerLoader()}</span></button>}
                     </div>
                 </form>
                     <div className="social-login" onClick={handleSocialLogin}>

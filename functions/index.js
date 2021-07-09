@@ -1,18 +1,26 @@
 const functions = require("firebase-functions");
 const admin = require('firebase-admin');
-const cors = require('cors');
+
 admin.initializeApp();
 
-exports.addAdminRole = functions.https.onCall((data, context) => {
-  return admin.auth().getUserByEmail(data.email).then(user=> {
-    return cors(admin.auth().setCustomUserClaims(user.uid, {
-      admin: true
-    }));
-  }).then(() => {
-    return {
-      message: `Success! ${data.email} has been made an admin`
+exports.addAdminRole = functions.https.onCall((req, res) => {
+
+    // check if user is an admin
+    if (res.auth.token.admin !== true) {
+        return {
+            erroor: "you are not an admin"
+        }
     }
-  }).catch(err => {
-    return err;
-  });
+
+    return admin.auth().getUserByEmail(req.email).then(user => {
+        return admin.auth().setCustomUserClaims(user.uid, {
+            admin: true
+        });
+    }).then(() => {
+        return {
+            message: `Success! ${req.email} has been made an admin`
+        }
+    }).catch(err => {
+        return err;
+    });
 });

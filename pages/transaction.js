@@ -16,7 +16,7 @@ const Transaction = () => {
                         return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
                 } 
         };
-        return (isLogin == true && transaction !== undefined? (<div>
+        return (isLogin == true && transaction !== undefined? (<>
         <DynamicHeader />
         <div className="transaction_table">
                 <div className="transaction_wrapper">
@@ -52,6 +52,6 @@ const Transaction = () => {
                 }
                 </div>
                 </div>
-        </div>) : ( <UserLogin />))
+        </>) : ( <UserLogin />))
 }  
 export default Transaction;

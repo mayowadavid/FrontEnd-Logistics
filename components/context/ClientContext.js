@@ -122,10 +122,6 @@ const ClientContextProvider = (props) => {
 
 
 
-  
-
-  
-
     return (
         <ClientContext.Provider value={{handleProfileChange, handleProfilePreview, handleProfileSubmit, handleProfileUpdate, profile, setProfile, setTemporaryImage, temporaryImage, profileDetails, profileImage, setProfileImage, count, setCount}}>
             {props.children}

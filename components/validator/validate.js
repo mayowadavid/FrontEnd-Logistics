@@ -62,18 +62,6 @@ export const requestValidate = ( id, value, formErrors ) => {
 };
 
 
-export const loginValidate = ( name, value, formErrors ) => {
-	
-	switch (name) {
-		case "email":
-			formErrors.email = emailRegex.test(value) && value.length > 0 ? '': '*input a valid email address*';
-			break;
-		case "password":
-			formErrors.password = value.length < 6  && value.length > 0 ? '*password is too short*' : '';
-			break;
-	  }
-};
-
 export const singupValidate = ( name, value, formErrors ) => {
 	
 	switch (name) {

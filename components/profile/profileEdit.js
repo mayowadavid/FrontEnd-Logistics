@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import { ClientContext } from '../context/ClientContext';
-import {avatar} from "../../svg";
+import {avatar, camera} from "../../svg";
 
 
 
@@ -13,13 +13,18 @@ const ProfileEdit = () => {
       <div className="profile-wrapper">
             <div  className="user-profile">
             <div className="profile-avatar">
-              {
-                profile.profileImage !==  undefined ? <img src={profile.profileImage !== undefined ? profile.profileImage: temporaryImage} /> : (<div> 
+              {<> 
                 <input type="file" name="profilePicture" onChange={ handleProfileChange } id="file" accept="/.jpg, .png, gif" />
                 <label htmlFor="file">
-                  {avatar()}<h4>Upload avatar</h4>
+                  {profile.profileImage !==  undefined ? 
+                  <><img src={profile.profileImage !== undefined ? profile.profileImage: temporaryImage} />
+                  <div className="profile-change-handler">
+                    <span>{camera()}</span>
+                    <span>change profile</span>
+                    </div></> :
+                   <>{avatar()}<h4>Upload avatar</h4> </>}
                 </label>
-                </div>) 
+                </>
               }
             </div>   
           <form onSubmit={handleProfilePreview}>

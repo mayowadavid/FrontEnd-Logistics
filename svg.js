@@ -116,6 +116,20 @@ export const Loader = () => {
     );        
 };
 
+export const innerLoader = () => {
+    return (<svg width="56" className="button-load" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M21 55.1179C8.9234 52.0096 0 41.0469 0 28C0 12.536 12.536 0 28 0C43.464 0 56 12.536 56 28C56 39.559 48.9958 49.4821 39 53.7566V44.706C44.4222 41.1285 48 34.9821 48 28C48 16.9543 39.0457 8 28 8C16.9543 8 8 16.9543 8 28C8 36.5831 13.4067 43.9033 21 46.7408V55.1179Z" fill="white"/>
+    </svg>
+    );        
+};
+
+export const camera = () => {
+    return (<svg className="profile-change" width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M512 144V432C512 458.5 490.5 480 464 480H48C21.5 480 0 458.5 0 432V144C0 117.5 21.5 96 48 96H136L148.3 63.1C155.3 44.4 173.2 32 193.2 32H318.7C338.7 32 356.6 44.4 363.6 63.1L376 96H464C490.5 96 512 117.5 512 144ZM376 288C376 221.8 322.2 168 256 168C189.8 168 136 221.8 136 288C136 354.2 189.8 408 256 408C322.2 408 376 354.2 376 288ZM344 288C344 336.5 304.5 376 256 376C207.5 376 168 336.5 168 288C168 239.5 207.5 200 256 200C304.5 200 344 239.5 344 288Z" fill="white"/>
+    </svg>
+    );        
+};
+
 export const offBack = () => {
     return (<svg width="44" height="44" className="bold-box" viewBox="0 0 129 148" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0)">

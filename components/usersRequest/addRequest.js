@@ -5,10 +5,6 @@ import React, {useContext, useState} from 'react';
 
 
 
-
-
-
-
 const AddRequest = () => {
    
     const {input, error, loading, handleChange, handleCheck, temporaryImage, requestImages, handleFormPreview, photoChange, handleRequestUpdate, setCount} = useContext(RequestContext);

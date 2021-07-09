@@ -6,10 +6,11 @@ const BottomButton = ()=> {
     const { selector} = useContext(RequestContext);
     return (
         <div className="bottom-button">
-        {selector.map(({content, icon, title, id}) => 
-           <Link key={id} href={`/${content}`}><a> <div className="side-holder">{icon} {title}</div> </a></Link>
+        {selector.map(({content, icon, title, id}) =>
+            <Link key={id} href={`/${content}`}><a> <div className="side-holder">{icon} <h2>{title}</h2></div> </a></Link>
         ) }
-</div>
+        <div className="counter">20</div>
+        </div>
     );
 }
 
